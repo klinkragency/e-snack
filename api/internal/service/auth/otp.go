@@ -7,8 +7,8 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/beldys/api/internal/repository"
-	"github.com/beldys/api/internal/service/email"
+	"github.com/klinkragency/e-snack/internal/repository"
+	"github.com/klinkragency/e-snack/internal/service/email"
 	"github.com/redis/go-redis/v9"
 	"golang.org/x/crypto/bcrypt"
 )

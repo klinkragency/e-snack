@@ -7,15 +7,15 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/beldys/api/internal/repository"
-	"github.com/beldys/api/internal/repository/postgres"
-	"github.com/beldys/api/internal/service/auth"
+	"github.com/klinkragency/e-snack/internal/repository"
+	"github.com/klinkragency/e-snack/internal/repository/postgres"
+	"github.com/klinkragency/e-snack/internal/service/auth"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	menuv1 "github.com/beldys/api/gen/menu/v1"
+	menuv1 "github.com/klinkragency/e-snack/gen/menu/v1"
 )
 
 type Service struct {

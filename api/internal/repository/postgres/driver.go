@@ -8,7 +8,7 @@ import (
 
 	"github.com/lib/pq"
 
-	"github.com/beldys/api/internal/repository"
+	"github.com/klinkragency/e-snack/internal/repository"
 )
 
 // ErrDuplicateAssignment is returned when a unique constraint is violated during assignment creation.

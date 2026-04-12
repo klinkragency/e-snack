@@ -9,14 +9,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/beldys/api/internal/mollie"
-	"github.com/beldys/api/internal/repository"
-	"github.com/beldys/api/internal/repository/postgres"
-	"github.com/beldys/api/internal/service/auth"
+	"github.com/klinkragency/e-snack/internal/mollie"
+	"github.com/klinkragency/e-snack/internal/repository"
+	"github.com/klinkragency/e-snack/internal/repository/postgres"
+	"github.com/klinkragency/e-snack/internal/service/auth"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	paymentv1 "github.com/beldys/api/gen/payment/v1"
+	paymentv1 "github.com/klinkragency/e-snack/gen/payment/v1"
 )
 
 type Service struct {

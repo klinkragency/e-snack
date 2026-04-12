@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package beldys.promo.v1;
 
-option go_package = "github.com/beldys/api/gen/promo/v1;promov1";
+option go_package = "github.com/klinkragency/e-snack/gen/promo/v1;promov1";
 
 import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";

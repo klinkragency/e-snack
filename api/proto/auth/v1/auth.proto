@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package beldys.auth.v1;
 
-option go_package = "github.com/beldys/api/gen/auth/v1;authv1";
+option go_package = "github.com/klinkragency/e-snack/gen/auth/v1;authv1";
 
 import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";

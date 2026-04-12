@@ -6,14 +6,14 @@ import (
 	"log"
 	"time"
 
-	"github.com/beldys/api/internal/repository"
-	"github.com/beldys/api/internal/repository/postgres"
+	"github.com/klinkragency/e-snack/internal/repository"
+	"github.com/klinkragency/e-snack/internal/repository/postgres"
 	"github.com/redis/go-redis/v9"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	authv1 "github.com/beldys/api/gen/auth/v1"
+	authv1 "github.com/klinkragency/e-snack/gen/auth/v1"
 )
 
 type Service struct {

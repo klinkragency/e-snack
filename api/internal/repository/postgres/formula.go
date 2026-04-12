@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"errors"
 
-	"github.com/beldys/api/internal/repository"
+	"github.com/klinkragency/e-snack/internal/repository"
 )
 
 type formulaRepository struct {

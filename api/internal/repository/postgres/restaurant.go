@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/beldys/api/internal/repository"
+	"github.com/klinkragency/e-snack/internal/repository"
 )
 
 type restaurantRepository struct {

@@ -6,7 +6,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/beldys/api/internal/repository"
+	"github.com/klinkragency/e-snack/internal/repository"
 )
 
 var ErrNotFound = errors.New("user not found")

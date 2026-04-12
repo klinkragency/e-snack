@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	menuv1 "github.com/beldys/api/gen/menu/v1"
+	menuv1 "github.com/klinkragency/e-snack/gen/menu/v1"
 )
 
 // ─── OpenAI types ───

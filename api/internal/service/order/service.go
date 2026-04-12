@@ -6,17 +6,17 @@ import (
 	"errors"
 	"log"
 
-	"github.com/beldys/api/internal/repository"
-	"github.com/beldys/api/internal/repository/postgres"
-	"github.com/beldys/api/internal/service/auth"
-	"github.com/beldys/api/internal/service/promo"
+	"github.com/klinkragency/e-snack/internal/repository"
+	"github.com/klinkragency/e-snack/internal/repository/postgres"
+	"github.com/klinkragency/e-snack/internal/service/auth"
+	"github.com/klinkragency/e-snack/internal/service/promo"
 	"github.com/redis/go-redis/v9"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	orderv1 "github.com/beldys/api/gen/order/v1"
-	promov1 "github.com/beldys/api/gen/promo/v1"
+	orderv1 "github.com/klinkragency/e-snack/gen/order/v1"
+	promov1 "github.com/klinkragency/e-snack/gen/promo/v1"
 )
 
 var validOrderTypes = map[string]bool{

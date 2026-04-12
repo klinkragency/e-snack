@@ -4,12 +4,12 @@ import (
 	"context"
 	"log"
 
-	"github.com/beldys/api/internal/service/auth"
-	"github.com/beldys/api/internal/storage"
+	"github.com/klinkragency/e-snack/internal/service/auth"
+	"github.com/klinkragency/e-snack/internal/storage"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	uploadv1 "github.com/beldys/api/gen/upload/v1"
+	uploadv1 "github.com/klinkragency/e-snack/gen/upload/v1"
 )
 
 var allowedContentTypes = map[string]bool{

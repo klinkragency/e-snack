@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	"github.com/beldys/api/internal/service/auth"
+	"github.com/klinkragency/e-snack/internal/service/auth"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"

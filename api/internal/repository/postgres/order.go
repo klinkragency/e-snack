@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/beldys/api/internal/repository"
+	"github.com/klinkragency/e-snack/internal/repository"
 )
 
 type orderRepository struct {

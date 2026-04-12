@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/beldys/api/internal/repository"
+	"github.com/klinkragency/e-snack/internal/repository"
 )
 
 var ErrUserPromoNotFound = errors.New("user promo code not found")

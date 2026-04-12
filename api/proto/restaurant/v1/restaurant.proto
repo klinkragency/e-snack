@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package beldys.restaurant.v1;
 
-option go_package = "github.com/beldys/api/gen/restaurant/v1;restaurantv1";
+option go_package = "github.com/klinkragency/e-snack/gen/restaurant/v1;restaurantv1";
 
 import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";

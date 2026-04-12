@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/beldys/api/internal/repository"
+	"github.com/klinkragency/e-snack/internal/repository"
 )
 
 type otpRepository struct {

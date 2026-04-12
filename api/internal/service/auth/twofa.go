@@ -8,7 +8,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	authv1 "github.com/beldys/api/gen/auth/v1"
+	authv1 "github.com/klinkragency/e-snack/gen/auth/v1"
 )
 
 func (s *Service) Setup2FA(ctx context.Context, req *authv1.Setup2FARequest) (*authv1.Setup2FAResponse, error) {

@@ -3,12 +3,12 @@ package auth
 import (
 	"context"
 
-	"github.com/beldys/api/internal/repository"
+	"github.com/klinkragency/e-snack/internal/repository"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	authv1 "github.com/beldys/api/gen/auth/v1"
+	authv1 "github.com/klinkragency/e-snack/gen/auth/v1"
 )
 
 func (s *Service) ListDeliveryAddresses(ctx context.Context, req *authv1.ListDeliveryAddressesRequest) (*authv1.ListDeliveryAddressesResponse, error) {

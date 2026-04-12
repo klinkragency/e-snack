@@ -1,4 +1,4 @@
-module github.com/beldys/api
+module github.com/klinkragency/e-snack
 
 go 1.25.4
 

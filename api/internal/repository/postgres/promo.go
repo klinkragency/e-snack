@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/beldys/api/internal/repository"
+	"github.com/klinkragency/e-snack/internal/repository"
 	"github.com/lib/pq"
 )
 

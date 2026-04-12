@@ -1,0 +1,164 @@
+syntax = "proto3";
+
+package beldys.restaurant.v1;
+
+option go_package = "github.com/beldys/api/gen/restaurant/v1;restaurantv1";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+service RestaurantService {
+  rpc CreateRestaurant(CreateRestaurantRequest) returns (Restaurant) {
+    option (google.api.http) = {
+      post: "/api/v1/admin/restaurants"
+      body: "*"
+    };
+  }
+
+  rpc GetRestaurant(GetRestaurantRequest) returns (Restaurant) {
+    option (google.api.http) = {
+      get: "/api/v1/restaurants/{slug}"
+    };
+  }
+
+  rpc ListRestaurants(ListRestaurantsRequest) returns (ListRestaurantsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/restaurants"
+    };
+  }
+
+  rpc UpdateRestaurant(UpdateRestaurantRequest) returns (Restaurant) {
+    option (google.api.http) = {
+      put: "/api/v1/admin/restaurants/{id}"
+      body: "*"
+    };
+  }
+
+  rpc UpdateCustomization(UpdateCustomizationRequest) returns (Customization) {
+    option (google.api.http) = {
+      put: "/api/v1/admin/restaurants/{restaurant_id}/customization"
+      body: "*"
+    };
+  }
+
+  rpc DeleteRestaurant(DeleteRestaurantRequest) returns (DeleteRestaurantResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/admin/restaurants/{id}"
+    };
+  }
+
+  rpc ReorderRestaurants(ReorderRestaurantsRequest) returns (ReorderRestaurantsResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/admin/restaurants/reorder"
+      body: "*"
+    };
+  }
+}
+
+message DeleteRestaurantRequest {
+  string id = 1;
+}
+
+message DeleteRestaurantResponse {
+  bool success = 1;
+}
+
+message ReorderRestaurantsRequest {
+  repeated string ids = 1; // ordered list of restaurant IDs
+}
+
+message ReorderRestaurantsResponse {
+  bool success = 1;
+}
+
+message CreateRestaurantRequest {
+  string name = 1;
+  string slug = 2;
+  string description = 3;
+  string address = 4;
+  double lat = 5;
+  double lng = 6;
+  string opening_hours = 7; // JSON string
+  double delivery_radius_km = 8;
+}
+
+message GetRestaurantRequest {
+  string slug = 1;
+}
+
+message ListRestaurantsRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+  bool active_only = 3;
+}
+
+message ListRestaurantsResponse {
+  repeated Restaurant restaurants = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message UpdateRestaurantRequest {
+  string id = 1;
+  string name = 2;
+  string slug = 3;
+  string description = 4;
+  string logo_url = 5;
+  string banner_url = 6;
+  string address = 7;
+  double lat = 8;
+  double lng = 9;
+  string opening_hours = 10;
+  double delivery_radius_km = 11;
+  bool is_active = 12;
+  string banner_position = 13; // JSON: {"x": 50, "y": 50}
+  bool pickup_enabled = 14;
+  double delivery_fee = 15;       // in euros, e.g. 2.90
+  int32 delivery_time_min = 16;  // estimated delivery time range min (minutes)
+  int32 delivery_time_max = 17;  // estimated delivery time range max (minutes)
+  double free_delivery_threshold = 18; // subtotal above which delivery is free (0 = disabled)
+  string notification_sound_url = 19;
+}
+
+message UpdateCustomizationRequest {
+  string restaurant_id = 1;
+  string primary_color = 2;
+  string secondary_color = 3;
+  string font = 4;
+  string theme = 5;
+}
+
+message Restaurant {
+  string id = 1;
+  string name = 2;
+  string slug = 3;
+  string description = 4;
+  string logo_url = 5;
+  string banner_url = 6;
+  string address = 7;
+  double lat = 8;
+  double lng = 9;
+  string opening_hours = 10;
+  double delivery_radius_km = 11;
+  bool is_active = 12;
+  Customization customization = 13;
+  google.protobuf.Timestamp created_at = 14;
+  google.protobuf.Timestamp updated_at = 15;
+  string banner_position = 16; // JSON: {"x": 50, "y": 50}
+  bool pickup_enabled = 17;
+  double delivery_fee = 18;       // in euros, e.g. 2.90
+  int32 delivery_time_min = 19;  // estimated delivery time range min (minutes)
+  int32 delivery_time_max = 20;  // estimated delivery time range max (minutes)
+  double free_delivery_threshold = 21; // subtotal above which delivery is free (0 = disabled)
+  string notification_sound_url = 22;
+}
+
+message Customization {
+  string id = 1;
+  string restaurant_id = 2;
+  string primary_color = 3;
+  string secondary_color = 4;
+  string font = 5;
+  string theme = 6;
+}

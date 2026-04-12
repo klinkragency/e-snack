@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS delivery_addresses;
+ALTER TABLE users DROP COLUMN IF EXISTS name;

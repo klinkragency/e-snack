@@ -1,0 +1,6 @@
+bin/
+.env
+.env.*
+docker-compose.yml
+docs/
+*.md

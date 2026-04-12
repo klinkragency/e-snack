@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" fill="none">
+  <rect width="800" height="600" fill="#f4f4f5"/>
+  <path d="M370 270h60v60h-60z" fill="#d4d4d8"/>
+  <text x="400" y="360" text-anchor="middle" fill="#a1a1aa" font-family="system-ui" font-size="16">Restaurant</text>
+</svg>

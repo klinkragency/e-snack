@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package beldys.upload.v1;
+
+option go_package = "github.com/beldys/api/gen/upload/v1;uploadv1";
+
+import "google/api/annotations.proto";
+
+service UploadService {
+  rpc GetPresignedUploadURL(UploadURLRequest) returns (UploadURLResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/upload/presign"
+      body: "*"
+    };
+  }
+
+  rpc ConfirmUpload(ConfirmUploadRequest) returns (ConfirmUploadResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/upload/confirm"
+      body: "*"
+    };
+  }
+}
+
+message UploadURLRequest {
+  string content_type = 1;  // image/jpeg, image/png, image/webp
+  string category = 2;      // restaurant_logo, restaurant_banner, product
+  string filename = 3;      // Original filename (optional)
+  int64 file_size = 4;      // File size in bytes
+}
+
+message UploadURLResponse {
+  string upload_url = 1;    // Presigned PUT URL
+  string file_key = 2;      // S3 key for the file
+  string public_url = 3;    // Public URL after upload
+  int64 expires_in = 4;     // Seconds until expiry
+}
+
+message ConfirmUploadRequest {
+  string file_key = 1;      // S3 key to verify
+}
+
+message ConfirmUploadResponse {
+  bool exists = 1;
+  string public_url = 2;
+  int64 size = 3;           // File size in bytes
+}

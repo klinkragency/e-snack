@@ -1,0 +1,392 @@
+syntax = "proto3";
+
+package beldys.menu.v1;
+
+option go_package = "github.com/beldys/api/gen/menu/v1;menuv1";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+service MenuService {
+  rpc GetMenu(GetMenuRequest) returns (Menu) {
+    option (google.api.http) = {
+      get: "/api/v1/restaurants/{restaurant_slug}/menu"
+    };
+  }
+
+  rpc CreateCategory(CreateCategoryRequest) returns (Category) {
+    option (google.api.http) = {
+      post: "/api/v1/admin/restaurants/{restaurant_id}/categories"
+      body: "*"
+    };
+  }
+
+  rpc UpdateCategory(UpdateCategoryRequest) returns (Category) {
+    option (google.api.http) = {
+      put: "/api/v1/admin/categories/{id}"
+      body: "*"
+    };
+  }
+
+  rpc DeleteCategory(DeleteCategoryRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1/admin/categories/{id}"
+    };
+  }
+
+  rpc CreateProduct(CreateProductRequest) returns (Product) {
+    option (google.api.http) = {
+      post: "/api/v1/admin/categories/{category_id}/products"
+      body: "*"
+    };
+  }
+
+  rpc UpdateProduct(UpdateProductRequest) returns (Product) {
+    option (google.api.http) = {
+      put: "/api/v1/admin/products/{id}"
+      body: "*"
+    };
+  }
+
+  rpc DeleteProduct(DeleteProductRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1/admin/products/{id}"
+    };
+  }
+
+  rpc SetProductAvailability(SetAvailabilityRequest) returns (Product) {
+    option (google.api.http) = {
+      patch: "/api/v1/admin/products/{id}/availability"
+      body: "*"
+    };
+  }
+
+  rpc CreateProductOption(CreateOptionRequest) returns (ProductOption) {
+    option (google.api.http) = {
+      post: "/api/v1/admin/products/{product_id}/options"
+      body: "*"
+    };
+  }
+
+  rpc AddOptionChoice(AddChoiceRequest) returns (OptionChoice) {
+    option (google.api.http) = {
+      post: "/api/v1/admin/options/{option_id}/choices"
+      body: "*"
+    };
+  }
+
+  rpc DeleteProductOption(DeleteOptionRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1/admin/options/{id}"
+    };
+  }
+
+  rpc UpdateProductOption(UpdateOptionRequest) returns (ProductOption) {
+    option (google.api.http) = {
+      put: "/api/v1/admin/options/{id}"
+      body: "*"
+    };
+  }
+
+  rpc UpdateOptionChoice(UpdateChoiceRequest) returns (OptionChoice) {
+    option (google.api.http) = {
+      put: "/api/v1/admin/choices/{id}"
+      body: "*"
+    };
+  }
+
+  rpc DeleteOptionChoice(DeleteChoiceRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1/admin/choices/{id}"
+    };
+  }
+
+  // ─── Formulas (combo menus) ───
+
+  rpc CreateFormula(CreateFormulaRequest) returns (Formula) {
+    option (google.api.http) = {
+      post: "/api/v1/admin/categories/{category_id}/formulas"
+      body: "*"
+    };
+  }
+
+  rpc UpdateFormula(UpdateFormulaRequest) returns (Formula) {
+    option (google.api.http) = {
+      put: "/api/v1/admin/formulas/{id}"
+      body: "*"
+    };
+  }
+
+  rpc DeleteFormula(DeleteFormulaRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1/admin/formulas/{id}"
+    };
+  }
+
+  rpc SetFormulaAvailability(SetFormulaAvailabilityRequest) returns (Formula) {
+    option (google.api.http) = {
+      patch: "/api/v1/admin/formulas/{id}/availability"
+      body: "*"
+    };
+  }
+
+  rpc GenerateMenuAI(GenerateMenuAIRequest) returns (GenerateMenuAIResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/admin/menu/generate"
+      body: "*"
+    };
+  }
+
+  rpc SuggestProductDetails(SuggestProductRequest) returns (SuggestProductResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/admin/menu/suggest"
+      body: "*"
+    };
+  }
+}
+
+message GetMenuRequest {
+  string restaurant_slug = 1;
+}
+
+message Menu {
+  string restaurant_id = 1;
+  string restaurant_name = 2;
+  repeated Category categories = 3;
+}
+
+message CreateCategoryRequest {
+  string restaurant_id = 1;
+  string name = 2;
+  int32 position = 3;
+}
+
+message UpdateCategoryRequest {
+  string id = 1;
+  string name = 2;
+  int32 position = 3;
+  bool is_active = 4;
+}
+
+message DeleteCategoryRequest {
+  string id = 1;
+}
+
+message Category {
+  string id = 1;
+  string restaurant_id = 2;
+  string name = 3;
+  int32 position = 4;
+  bool is_active = 5;
+  repeated Product products = 6;
+  google.protobuf.Timestamp created_at = 7;
+  repeated Formula formulas = 8;
+}
+
+message CreateProductRequest {
+  string category_id = 1;
+  string name = 2;
+  string description = 3;
+  double price = 4;
+  string image_url = 5;
+  repeated string allergens = 6;
+  string nutritional_info = 7; // JSON string
+}
+
+message UpdateProductRequest {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  double price = 4;
+  string image_url = 5;
+  bool is_available = 6;
+  repeated string allergens = 7;
+  string nutritional_info = 8;
+  string category_id = 9; // optional: move product to a different category
+  int32 position = 10;    // optional: reorder within category
+}
+
+message DeleteProductRequest {
+  string id = 1;
+}
+
+message SetAvailabilityRequest {
+  string id = 1;
+  bool is_available = 2;
+}
+
+message Product {
+  string id = 1;
+  string category_id = 2;
+  string name = 3;
+  string description = 4;
+  double price = 5;
+  string image_url = 6;
+  bool is_available = 7;
+  repeated string allergens = 8;
+  string nutritional_info = 9;
+  repeated ProductOption options = 10;
+  google.protobuf.Timestamp created_at = 11;
+  int32 position = 12;
+}
+
+message CreateOptionRequest {
+  string product_id = 1;
+  string name = 2;
+  string type = 3; // single or multiple
+  bool is_required = 4;
+  repeated OptionChoiceInput choices = 5;
+  int32 max_selections = 6; // 0 = unlimited
+}
+
+message OptionChoiceInput {
+  string name = 1;
+  double price_modifier = 2;
+}
+
+message AddChoiceRequest {
+  string option_id = 1;
+  string name = 2;
+  double price_modifier = 3;
+}
+
+message DeleteOptionRequest {
+  string id = 1;
+}
+
+message UpdateOptionRequest {
+  string id = 1;
+  string name = 2;
+  string type = 3;
+  bool is_required = 4;
+  int32 max_selections = 5; // 0 = unlimited
+}
+
+message UpdateChoiceRequest {
+  string id = 1;
+  string name = 2;
+  double price_modifier = 3;
+}
+
+message DeleteChoiceRequest {
+  string id = 1;
+}
+
+message ProductOption {
+  string id = 1;
+  string product_id = 2;
+  string name = 3;
+  string type = 4;
+  bool is_required = 5;
+  repeated OptionChoice choices = 6;
+  int32 max_selections = 7; // 0 = unlimited
+}
+
+message OptionChoice {
+  string id = 1;
+  string option_id = 2;
+  string name = 3;
+  double price_modifier = 4;
+}
+
+// ─── Formulas (combo menus) ───
+
+message Formula {
+  string id = 1;
+  string category_id = 2;
+  string name = 3;
+  string description = 4;
+  double base_price = 5;
+  string image_url = 6;
+  bool is_available = 7;
+  repeated FormulaProduct products = 8;
+  google.protobuf.Timestamp created_at = 9;
+  int32 position = 10;
+}
+
+message FormulaProduct {
+  string product_id = 1;
+  Product product = 2; // full product with options
+  int32 position = 3;
+  string group_label = 4; // empty = fixed product, non-empty = choice group (e.g. "Boisson au choix")
+}
+
+message FormulaProductInput {
+  string product_id = 1;
+  string group_label = 2; // empty = fixed product, non-empty = choice group label
+}
+
+message CreateFormulaRequest {
+  string category_id = 1;
+  string name = 2;
+  string description = 3;
+  double base_price = 4;
+  string image_url = 5;
+  repeated FormulaProductInput products = 6;
+}
+
+message UpdateFormulaRequest {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  double base_price = 4;
+  string image_url = 5;
+  repeated FormulaProductInput products = 6;
+  string category_id = 7; // optional: move formula to a different category
+  int32 position = 8;     // optional: reorder within category
+}
+
+message DeleteFormulaRequest {
+  string id = 1;
+}
+
+message SetFormulaAvailabilityRequest {
+  string id = 1;
+  bool is_available = 2;
+}
+
+// ─── AI Menu Generation ───
+
+message GenerateMenuAIRequest {
+  string restaurant_id = 1;
+  string cuisine_type = 2;
+  string language = 3; // default "fr"
+}
+
+message GenerateMenuAIResponse {
+  repeated SuggestedCategory categories = 1;
+}
+
+message SuggestedCategory {
+  string name = 1;
+  repeated SuggestedProduct products = 2;
+}
+
+message SuggestedProduct {
+  string name = 1;
+  string description = 2;
+  double price = 3;
+  repeated string allergens = 4;
+  repeated SuggestedOption options = 5;
+}
+
+message SuggestedOption {
+  string name = 1;
+  string type = 2;
+  bool is_required = 3;
+  repeated OptionChoiceInput choices = 4;
+}
+
+message SuggestProductRequest {
+  string product_name = 1;
+  string cuisine_context = 2;
+  string language = 3;
+}
+
+message SuggestProductResponse {
+  string description = 1;
+  double suggested_price = 2;
+  repeated string allergens = 3;
+  repeated SuggestedOption suggested_options = 4;
+}

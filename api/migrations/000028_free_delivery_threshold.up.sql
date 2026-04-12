@@ -1,0 +1,2 @@
+ALTER TABLE restaurants
+  ADD COLUMN IF NOT EXISTS free_delivery_threshold NUMERIC(10,2) NOT NULL DEFAULT 0;

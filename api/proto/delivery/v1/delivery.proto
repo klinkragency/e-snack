@@ -1,0 +1,331 @@
+syntax = "proto3";
+
+package beldys.delivery.v1;
+
+option go_package = "github.com/beldys/api/gen/delivery/v1;deliveryv1";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+service DeliveryService {
+  // ===== Driver Endpoints =====
+
+  // List deliveries assigned to the current driver
+  rpc ListMyDeliveries(ListMyDeliveriesRequest) returns (ListDeliveriesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/driver/deliveries"
+    };
+  }
+
+  // Accept a delivery assignment
+  rpc AcceptDelivery(AcceptDeliveryRequest) returns (DeliveryAssignment) {
+    option (google.api.http) = {
+      post: "/api/v1/driver/deliveries/{assignment_id}/accept"
+      body: "*"
+    };
+  }
+
+  // Reject a delivery assignment
+  rpc RejectDelivery(RejectDeliveryRequest) returns (DeliveryAssignment) {
+    option (google.api.http) = {
+      post: "/api/v1/driver/deliveries/{assignment_id}/reject"
+      body: "*"
+    };
+  }
+
+  // Update delivery status (picked_up, delivered)
+  rpc UpdateDeliveryStatus(UpdateDeliveryStatusRequest) returns (DeliveryAssignment) {
+    option (google.api.http) = {
+      patch: "/api/v1/driver/deliveries/{assignment_id}/status"
+      body: "*"
+    };
+  }
+
+  // Update driver's GPS location
+  rpc UpdateLocation(UpdateLocationRequest) returns (UpdateLocationResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/driver/location"
+      body: "*"
+    };
+  }
+
+  // Set driver availability status
+  rpc SetAvailability(SetAvailabilityRequest) returns (DriverStatus) {
+    option (google.api.http) = {
+      post: "/api/v1/driver/availability"
+      body: "*"
+    };
+  }
+
+  // Get driver's own status
+  rpc GetMyStatus(GetMyStatusRequest) returns (DriverStatus) {
+    option (google.api.http) = {
+      get: "/api/v1/driver/status"
+    };
+  }
+
+  // Get driver's own stats (deliveries count, hours worked)
+  rpc GetMyStats(GetMyStatsRequest) returns (DriverStats) {
+    option (google.api.http) = {
+      get: "/api/v1/driver/stats"
+    };
+  }
+
+  // Get driver's own daily work report over a date range
+  rpc GetMyReport(GetMyReportRequest) returns (GetMyReportResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/driver/report"
+    };
+  }
+
+  // ===== Admin Endpoints =====
+
+  // List all drivers with their status
+  rpc AdminListDrivers(AdminListDriversRequest) returns (AdminListDriversResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/admin/drivers"
+    };
+  }
+
+  // Get detailed info about a specific driver
+  rpc AdminGetDriver(AdminGetDriverRequest) returns (DriverDetails) {
+    option (google.api.http) = {
+      get: "/api/v1/admin/drivers/{driver_id}"
+    };
+  }
+
+  // Assign a driver to an order
+  rpc AdminAssignDriver(AdminAssignDriverRequest) returns (DeliveryAssignment) {
+    option (google.api.http) = {
+      post: "/api/v1/admin/orders/{order_id}/assign"
+      body: "*"
+    };
+  }
+
+  // Unassign a driver from an order
+  rpc AdminUnassignDriver(AdminUnassignDriverRequest) returns (DeliveryAssignment) {
+    option (google.api.http) = {
+      post: "/api/v1/admin/orders/{order_id}/unassign"
+      body: "*"
+    };
+  }
+
+  // List available drivers near a location
+  rpc AdminListNearbyDrivers(AdminListNearbyDriversRequest) returns (AdminListDriversResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/admin/drivers/nearby"
+    };
+  }
+
+  // Get driver location for an order (client tracking)
+  rpc GetOrderDriverLocation(GetOrderDriverLocationRequest) returns (DriverLocation) {
+    option (google.api.http) = {
+      get: "/api/v1/orders/{order_id}/driver/location"
+    };
+  }
+
+  // Get a daily work/delivery report for a driver over a date range
+  rpc AdminGetDriverReport(AdminGetDriverReportRequest) returns (AdminGetDriverReportResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/admin/drivers/{driver_id}/report"
+    };
+  }
+}
+
+// ===== Driver Messages =====
+
+message ListMyDeliveriesRequest {
+  string status = 1; // Filter: pending, accepted, completed (optional)
+}
+
+message ListDeliveriesResponse {
+  repeated DeliveryAssignment assignments = 1;
+}
+
+message AcceptDeliveryRequest {
+  string assignment_id = 1;
+}
+
+message RejectDeliveryRequest {
+  string assignment_id = 1;
+  string reason = 2;
+}
+
+message UpdateDeliveryStatusRequest {
+  string assignment_id = 1;
+  string status = 2; // picked_up, delivered
+}
+
+message UpdateLocationRequest {
+  double lat = 1;
+  double lng = 2;
+  double heading = 3;  // Direction 0-360
+  double speed = 4;    // km/h
+  double accuracy = 5; // meters
+}
+
+message UpdateLocationResponse {
+  bool success = 1;
+}
+
+message SetAvailabilityRequest {
+  string status = 1; // offline, available
+}
+
+message GetMyStatusRequest {}
+
+message GetMyStatsRequest {}
+
+// ===== Admin Messages =====
+
+message AdminListDriversRequest {
+  string status = 1; // Filter: offline, available, busy, on_delivery (optional)
+  int32 page = 2;
+  int32 page_size = 3;
+}
+
+message AdminListDriversResponse {
+  repeated DriverDetails drivers = 1;
+  int32 total = 2;
+}
+
+message AdminGetDriverRequest {
+  string driver_id = 1;
+}
+
+message AdminAssignDriverRequest {
+  string order_id = 1;
+  string driver_id = 2;
+  bool send_notification = 3; // Send notification
+  int32 expiry_minutes = 4;   // Assignment expires after X minutes (default 10)
+}
+
+message AdminUnassignDriverRequest {
+  string order_id = 1;
+  string reason = 2; // Optional reason for unassigning
+}
+
+message AdminListNearbyDriversRequest {
+  double lat = 1;
+  double lng = 2;
+  double radius_km = 3; // Search radius (default 5km)
+}
+
+message GetOrderDriverLocationRequest {
+  string order_id = 1;
+}
+
+// ===== Common Messages =====
+
+message DeliveryAssignment {
+  string id = 1;
+  string order_id = 2;
+  string driver_id = 3;
+  string status = 4; // pending, accepted, rejected, expired, completed, cancelled
+  google.protobuf.Timestamp assigned_at = 5;
+  google.protobuf.Timestamp responded_at = 6;
+  google.protobuf.Timestamp expires_at = 7;
+  google.protobuf.Timestamp completed_at = 8;
+  string notes = 9;
+
+  // Order details (populated when fetching)
+  OrderSummary order = 10;
+}
+
+message OrderItemSummary {
+  string product_name = 1;
+  int32 quantity = 2;
+  double unit_price = 3;
+  double total = 4;
+  string notes = 5;
+}
+
+message OrderSummary {
+  string id = 1;
+  string restaurant_name = 2;
+  string restaurant_address = 3;
+  double restaurant_lat = 4;
+  double restaurant_lng = 5;
+  string delivery_address = 6;
+  double delivery_lat = 7;
+  double delivery_lng = 8;
+  string delivery_instructions = 9;
+  double total = 10;
+  string status = 11;
+  string customer_name = 12;
+  string customer_phone = 13;
+  int32 item_count = 14;
+  google.protobuf.Timestamp created_at = 15;
+  repeated OrderItemSummary items = 16;
+}
+
+message DriverStatus {
+  string driver_id = 1;
+  string status = 2; // offline, available, busy, on_delivery
+  string current_order_id = 3;
+  string phone = 4;
+  google.protobuf.Timestamp last_seen_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message DriverLocation {
+  string driver_id = 1;
+  double lat = 2;
+  double lng = 3;
+  double heading = 4;
+  double speed = 5;
+  double accuracy = 6;
+  google.protobuf.Timestamp updated_at = 7;
+}
+
+message DriverDetails {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  string phone = 4;
+  DriverStatus status = 5;
+  DriverLocation location = 6;
+  DriverStats stats = 7;
+}
+
+message DriverStats {
+  int32 deliveries_today = 1;
+  int32 deliveries_total = 2;
+  double rating = 3;
+  double earnings_today = 4;
+  double hours_worked_today = 5;
+}
+
+// ===== Driver Report Messages =====
+
+message GetMyReportRequest {
+  string from_date = 1; // "2026-02-01"
+  string to_date = 2;   // "2026-02-28"
+}
+
+message GetMyReportResponse {
+  repeated DailyDriverSummary days = 1;
+  double total_hours = 2;
+  int32 total_deliveries = 3;
+}
+
+message AdminGetDriverReportRequest {
+  string driver_id = 1;
+  string from_date = 2; // "2026-02-01"
+  string to_date = 3;   // "2026-02-21"
+}
+
+message DailyDriverSummary {
+  string date = 1;
+  double hours_worked = 2;
+  int32 deliveries_completed = 3;
+}
+
+message AdminGetDriverReportResponse {
+  DriverDetails driver = 1;
+  repeated DailyDriverSummary days = 2;
+  double total_hours = 3;
+  int32 total_deliveries = 4;
+}
+
+

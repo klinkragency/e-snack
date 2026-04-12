@@ -1,0 +1,14 @@
+.env
+.env.local
+*.local.env
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+node_modules/
+.next/
+/api/bin/
+.claude/
+.mcp.json
+CLAUDE.md

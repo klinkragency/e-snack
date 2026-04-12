@@ -1,0 +1,407 @@
+syntax = "proto3";
+
+package beldys.promo.v1;
+
+option go_package = "github.com/beldys/api/gen/promo/v1;promov1";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+service PromoService {
+  // ==================== Admin: Promo CRUD ====================
+
+  // Create a new promo code
+  rpc CreatePromo(CreatePromoRequest) returns (PromoCode) {
+    option (google.api.http) = {
+      post: "/api/v1/admin/promos"
+      body: "*"
+    };
+  }
+
+  // List all promo codes
+  rpc ListPromos(ListPromosRequest) returns (ListPromosResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/admin/promos"
+    };
+  }
+
+  // Get a single promo code
+  rpc GetPromo(GetPromoRequest) returns (PromoCode) {
+    option (google.api.http) = {
+      get: "/api/v1/admin/promos/{id}"
+    };
+  }
+
+  // Update a promo code
+  rpc UpdatePromo(UpdatePromoRequest) returns (PromoCode) {
+    option (google.api.http) = {
+      put: "/api/v1/admin/promos/{id}"
+      body: "*"
+    };
+  }
+
+  // Delete a promo code
+  rpc DeletePromo(DeletePromoRequest) returns (DeletePromoResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/admin/promos/{id}"
+    };
+  }
+
+  // Get usage history for a promo code
+  rpc GetPromoUsage(GetPromoUsageRequest) returns (GetPromoUsageResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/admin/promos/{id}/usage"
+    };
+  }
+
+  // Get promo statistics
+  rpc GetPromoStats(GetPromoStatsRequest) returns (GetPromoStatsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/admin/promos/{id}/stats"
+    };
+  }
+
+  // ==================== Admin: User Assignment ====================
+
+  // Assign promo to a single user
+  rpc AssignPromoToUser(AssignPromoToUserRequest) returns (UserPromoCode) {
+    option (google.api.http) = {
+      post: "/api/v1/admin/promos/{promo_id}/assign"
+      body: "*"
+    };
+  }
+
+  // Bulk assign promo to multiple users
+  rpc AssignPromoToUsers(AssignPromoToUsersRequest) returns (AssignPromoToUsersResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/admin/promos/{promo_id}/assign-bulk"
+      body: "*"
+    };
+  }
+
+  // Revoke user's promo access
+  rpc RevokeUserPromo(RevokeUserPromoRequest) returns (UserPromoCode) {
+    option (google.api.http) = {
+      post: "/api/v1/admin/promos/{promo_id}/revoke/{user_id}"
+      body: "*"
+    };
+  }
+
+  // List all users assigned to a promo
+  rpc ListPromoAssignments(ListPromoAssignmentsRequest) returns (ListPromoAssignmentsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/admin/promos/{promo_id}/assignments"
+    };
+  }
+
+  // Get assignment details
+  rpc GetPromoAssignment(GetPromoAssignmentRequest) returns (UserPromoCode) {
+    option (google.api.http) = {
+      get: "/api/v1/admin/promos/{promo_id}/assignments/{user_id}"
+    };
+  }
+
+  // ==================== Client: Promo Usage ====================
+
+  // Validate a promo code before applying
+  rpc ValidatePromo(ValidatePromoRequest) returns (ValidatePromoResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/promos/validate"
+      body: "*"
+    };
+  }
+
+  // Claim a promo code (for codes that require claiming)
+  rpc ClaimPromo(ClaimPromoRequest) returns (ClaimPromoResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/promos/claim"
+      body: "*"
+    };
+  }
+
+  // List user's available promo codes
+  rpc ListMyPromos(ListMyPromosRequest) returns (ListMyPromosResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/promos/mine"
+    };
+  }
+
+  // Get details of one of user's promos
+  rpc GetMyPromo(GetMyPromoRequest) returns (UserPromoCode) {
+    option (google.api.http) = {
+      get: "/api/v1/promos/mine/{id}"
+    };
+  }
+
+  // ==================== Internal ====================
+
+  // Record promo usage after order creation
+  rpc RecordPromoUsage(RecordPromoUsageRequest) returns (RecordPromoUsageResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/promos/record-usage"
+      body: "*"
+    };
+  }
+}
+
+// ==================== Admin: Promo CRUD Requests ====================
+
+message CreatePromoRequest {
+  string code = 1;
+  string discount_type = 2; // percentage, fixed_amount, free_delivery
+  double discount_value = 3;
+  double min_order_amount = 4;
+  double max_discount_amount = 5;
+  int32 max_total_uses = 6;
+  int32 max_uses_per_user = 7;
+  bool first_order_only = 8;
+  google.protobuf.Timestamp starts_at = 9;
+  google.protobuf.Timestamp expires_at = 10;
+  string description = 11;
+  repeated string restaurant_ids = 12; // Empty = all restaurants
+  bool is_private = 13; // Private codes require assignment to users
+  bool requires_claim = 14; // User must claim before using
+}
+
+message ListPromosRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+  string search = 3;
+  bool active_only = 4;
+  string type_filter = 5; // all, public, private
+}
+
+message ListPromosResponse {
+  repeated PromoCode promos = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message GetPromoRequest {
+  string id = 1;
+}
+
+message UpdatePromoRequest {
+  string id = 1;
+  string code = 2;
+  string discount_type = 3;
+  double discount_value = 4;
+  double min_order_amount = 5;
+  double max_discount_amount = 6;
+  int32 max_total_uses = 7;
+  int32 max_uses_per_user = 8;
+  bool first_order_only = 9;
+  google.protobuf.Timestamp starts_at = 10;
+  google.protobuf.Timestamp expires_at = 11;
+  bool is_active = 12;
+  string description = 13;
+  repeated string restaurant_ids = 14;
+  bool is_private = 15;
+  bool requires_claim = 16;
+}
+
+message DeletePromoRequest {
+  string id = 1;
+}
+
+message DeletePromoResponse {
+  bool success = 1;
+}
+
+message GetPromoUsageRequest {
+  string id = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+}
+
+message GetPromoUsageResponse {
+  repeated PromoUsage usage = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+  double total_discount_given = 5;
+}
+
+message GetPromoStatsRequest {
+  string id = 1;
+}
+
+message GetPromoStatsResponse {
+  int32 total_assignments = 1;
+  int32 claimed_count = 2;
+  int32 used_count = 3;
+  int32 revoked_count = 4;
+  int32 expired_count = 5;
+  double total_discount_given = 6;
+  double average_discount = 7;
+  int32 unique_users = 8;
+}
+
+// ==================== Admin: User Assignment Requests ====================
+
+message AssignPromoToUserRequest {
+  string promo_id = 1;
+  string user_id = 2;
+  google.protobuf.Timestamp expires_at = 3; // Per-user expiration (optional)
+  string notes = 4; // Admin notes
+  bool send_notification = 5; // Send email/push to user
+}
+
+message AssignPromoToUsersRequest {
+  string promo_id = 1;
+  repeated string user_ids = 2;
+  google.protobuf.Timestamp expires_at = 3;
+  string notes = 4;
+  bool send_notification = 5;
+}
+
+message AssignPromoToUsersResponse {
+  int32 success_count = 1;
+  int32 failed_count = 2;
+  repeated string failed_user_ids = 3;
+  repeated string failed_reasons = 4;
+}
+
+message RevokeUserPromoRequest {
+  string promo_id = 1;
+  string user_id = 2;
+  string reason = 3;
+}
+
+message ListPromoAssignmentsRequest {
+  string promo_id = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+  string status_filter = 4; // all, assigned, claimed, used, revoked, expired
+}
+
+message ListPromoAssignmentsResponse {
+  repeated UserPromoCode assignments = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message GetPromoAssignmentRequest {
+  string promo_id = 1;
+  string user_id = 2;
+}
+
+// ==================== Client Requests ====================
+
+message ValidatePromoRequest {
+  string code = 1;
+  string restaurant_id = 2;
+  double subtotal = 3;
+  double delivery_fee = 4;
+}
+
+message ValidatePromoResponse {
+  bool valid = 1;
+  string error_message = 2;
+  PromoCode promo = 3;
+  double discount_amount = 4;
+  bool requires_claim = 5; // True if user needs to claim first
+  bool is_claimed = 6; // True if already claimed by user
+}
+
+message ClaimPromoRequest {
+  string code = 1; // Can claim by code
+  string promo_id = 2; // Or by promo ID (from assignment)
+}
+
+message ClaimPromoResponse {
+  bool success = 1;
+  string error_message = 2;
+  UserPromoCode user_promo = 3;
+}
+
+message ListMyPromosRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+  string status_filter = 3; // all, available, claimed, used, expired
+  bool include_public = 4; // Include public promos user can use
+}
+
+message ListMyPromosResponse {
+  repeated UserPromoCode promos = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message GetMyPromoRequest {
+  string id = 1; // UserPromoCode ID
+}
+
+// ==================== Internal Requests ====================
+
+message RecordPromoUsageRequest {
+  string promo_code_id = 1;
+  string user_id = 2;
+  string order_id = 3;
+  double discount_applied = 4;
+  string source = 5; // direct, claimed, gifted, referral
+  string user_promo_code_id = 6; // If from assignment
+}
+
+message RecordPromoUsageResponse {
+  bool success = 1;
+}
+
+// ==================== Domain Messages ====================
+
+message PromoCode {
+  string id = 1;
+  string code = 2;
+  string discount_type = 3; // percentage, fixed_amount, free_delivery
+  double discount_value = 4;
+  double min_order_amount = 5;
+  double max_discount_amount = 6;
+  int32 max_total_uses = 7;
+  int32 max_uses_per_user = 8;
+  bool first_order_only = 9;
+  google.protobuf.Timestamp starts_at = 10;
+  google.protobuf.Timestamp expires_at = 11;
+  bool is_active = 12;
+  int32 current_uses = 13;
+  string description = 14;
+  repeated string restaurant_ids = 15;
+  google.protobuf.Timestamp created_at = 16;
+  google.protobuf.Timestamp updated_at = 17;
+  bool is_private = 18; // Private codes require assignment
+  bool requires_claim = 19; // User must claim before using
+  int32 assigned_count = 20; // Number of users assigned
+  int32 claimed_count = 21; // Number of users who claimed
+}
+
+message UserPromoCode {
+  string id = 1;
+  string promo_code_id = 2;
+  string user_id = 3;
+  string user_email = 4; // Joined from users table
+  string user_name = 5;
+  string status = 6; // assigned, claimed, used, revoked, expired
+  google.protobuf.Timestamp assigned_at = 7;
+  google.protobuf.Timestamp claimed_at = 8;
+  google.protobuf.Timestamp used_at = 9;
+  string used_order_id = 10;
+  google.protobuf.Timestamp revoked_at = 11;
+  string revoked_reason = 12;
+  google.protobuf.Timestamp expires_at = 13; // Per-user expiration
+  string notes = 14;
+  PromoCode promo = 15; // Full promo details
+  google.protobuf.Timestamp created_at = 16;
+}
+
+message PromoUsage {
+  string id = 1;
+  string promo_code_id = 2;
+  string user_id = 3;
+  string user_email = 4;
+  string order_id = 5;
+  double discount_applied = 6;
+  string source = 7; // direct, claimed, gifted, referral
+  google.protobuf.Timestamp created_at = 8;
+}

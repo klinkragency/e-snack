@@ -1,0 +1,446 @@
+syntax = "proto3";
+
+package beldys.auth.v1;
+
+option go_package = "github.com/beldys/api/gen/auth/v1;authv1";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+service AuthService {
+  rpc Register(RegisterRequest) returns (AuthResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/register"
+      body: "*"
+    };
+  }
+
+  rpc Login(LoginRequest) returns (AuthResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/login"
+      body: "*"
+    };
+  }
+
+  rpc RefreshToken(RefreshRequest) returns (AuthResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/refresh"
+      body: "*"
+    };
+  }
+
+  rpc GetProfile(GetProfileRequest) returns (UserProfile) {
+    option (google.api.http) = {
+      get: "/api/v1/auth/profile"
+    };
+  }
+
+  rpc OAuthLogin(OAuthLoginRequest) returns (AuthResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/oauth"
+      body: "*"
+    };
+  }
+
+  rpc SendEmailVerification(SendEmailVerificationRequest) returns (VerificationResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/verify-email/send"
+      body: "*"
+    };
+  }
+
+  rpc VerifyEmail(VerifyEmailRequest) returns (VerificationResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/verify-email"
+      body: "*"
+    };
+  }
+
+  rpc ForgotPassword(ForgotPasswordRequest) returns (PasswordResetResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/forgot-password"
+      body: "*"
+    };
+  }
+
+  rpc VerifyResetCode(VerifyResetCodeRequest) returns (PasswordResetResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/verify-reset-code"
+      body: "*"
+    };
+  }
+
+  rpc ResetPassword(ResetPasswordRequest) returns (PasswordResetResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/reset-password"
+      body: "*"
+    };
+  }
+
+  rpc UpdateProfile(UpdateProfileRequest) returns (UserProfile) {
+    option (google.api.http) = {
+      patch: "/api/v1/auth/profile"
+      body: "*"
+    };
+  }
+
+  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/change-password"
+      body: "*"
+    };
+  }
+
+  rpc ListDeliveryAddresses(ListDeliveryAddressesRequest) returns (ListDeliveryAddressesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/auth/addresses"
+    };
+  }
+
+  rpc CreateDeliveryAddress(CreateDeliveryAddressRequest) returns (DeliveryAddress) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/addresses"
+      body: "*"
+    };
+  }
+
+  rpc UpdateDeliveryAddress(UpdateDeliveryAddressRequest) returns (DeliveryAddress) {
+    option (google.api.http) = {
+      patch: "/api/v1/auth/addresses/{id}"
+      body: "*"
+    };
+  }
+
+  rpc DeleteDeliveryAddress(DeleteDeliveryAddressRequest) returns (DeleteDeliveryAddressResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/auth/addresses/{id}"
+    };
+  }
+
+  rpc SetDefaultAddress(SetDefaultAddressRequest) returns (DeliveryAddress) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/addresses/{id}/default"
+      body: "*"
+    };
+  }
+
+  // 2FA endpoints
+  rpc Setup2FA(Setup2FARequest) returns (Setup2FAResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/2fa/setup"
+      body: "*"
+    };
+  }
+
+  rpc Enable2FA(Enable2FARequest) returns (Enable2FAResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/2fa/enable"
+      body: "*"
+    };
+  }
+
+  rpc Disable2FA(Disable2FARequest) returns (Disable2FAResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/2fa/disable"
+      body: "*"
+    };
+  }
+
+  rpc Verify2FA(Verify2FARequest) returns (AuthResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/2fa/verify"
+      body: "*"
+    };
+  }
+
+  // ==================== Admin User Management ====================
+  rpc AdminListUsers(AdminListUsersRequest) returns (AdminListUsersResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/admin/users"
+    };
+  }
+
+  rpc AdminGetUser(AdminGetUserRequest) returns (AdminUser) {
+    option (google.api.http) = {
+      get: "/api/v1/admin/users/{id}"
+    };
+  }
+
+  rpc AdminUpdateUser(AdminUpdateUserRequest) returns (AdminUser) {
+    option (google.api.http) = {
+      patch: "/api/v1/admin/users/{id}"
+      body: "*"
+    };
+  }
+
+  rpc AdminDeleteUser(AdminDeleteUserRequest) returns (AdminDeleteUserResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/admin/users/{id}"
+    };
+  }
+
+  rpc AdminBanUser(AdminBanUserRequest) returns (AdminUser) {
+    option (google.api.http) = {
+      post: "/api/v1/admin/users/{id}/ban"
+      body: "*"
+    };
+  }
+
+  rpc AdminUnbanUser(AdminUnbanUserRequest) returns (AdminUser) {
+    option (google.api.http) = {
+      post: "/api/v1/admin/users/{id}/unban"
+      body: "*"
+    };
+  }
+
+  rpc AdminVerifyUserEmail(AdminVerifyUserEmailRequest) returns (AdminUser) {
+    option (google.api.http) = {
+      post: "/api/v1/admin/users/{id}/verify-email"
+      body: "*"
+    };
+  }
+
+  rpc AdminToggleUser2FA(AdminToggleUser2FARequest) returns (AdminUser) {
+    option (google.api.http) = {
+      post: "/api/v1/admin/users/{id}/2fa/{endpoint}"
+      body: "*"
+    };
+  }
+}
+
+message RegisterRequest {
+  string email = 1;
+  string password = 2;
+  string phone = 3;
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+  string totp_code = 3; // Required when 2FA is enabled
+}
+
+message RefreshRequest {
+  string refresh_token = 1;
+}
+
+message GetProfileRequest {}
+
+message OAuthLoginRequest {
+  string provider = 1;
+  string id_token = 2;
+}
+
+message AuthResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+  int64 expires_in = 3;
+  UserProfile user = 4;
+  bool requires_2fa = 5;       // True when 2FA is needed
+  string two_fa_token = 6;     // Temporary token to complete 2FA
+}
+
+message UserProfile {
+  string id = 1;
+  string email = 2;
+  string role = 3;
+  string phone = 4;
+  google.protobuf.Timestamp created_at = 5;
+  bool email_verified = 6;
+  bool phone_verified = 7;
+  bool two_factor_enabled = 8;
+  string name = 9;
+}
+
+message SendEmailVerificationRequest {}
+
+message VerifyEmailRequest {
+  string code = 1;
+}
+
+message VerificationResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message ForgotPasswordRequest {
+  string email = 1;
+}
+
+message VerifyResetCodeRequest {
+  string email = 1;
+  string code = 2;
+}
+
+message ResetPasswordRequest {
+  string reset_token = 1;
+  string new_password = 2;
+}
+
+message PasswordResetResponse {
+  bool success = 1;
+  string message = 2;
+  string reset_token = 3;
+}
+
+// ==================== Profile ====================
+
+message UpdateProfileRequest {
+  string name = 1;
+  string phone = 2;
+}
+
+message ChangePasswordRequest {
+  string old_password = 1;
+  string new_password = 2;
+}
+
+message ChangePasswordResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ==================== Delivery Addresses ====================
+
+message DeliveryAddress {
+  string id = 1;
+  string user_id = 2;
+  string label = 3;
+  string address = 4;
+  double lat = 5;
+  double lng = 6;
+  bool is_default = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+}
+
+message ListDeliveryAddressesRequest {}
+
+message ListDeliveryAddressesResponse {
+  repeated DeliveryAddress addresses = 1;
+}
+
+message CreateDeliveryAddressRequest {
+  string label = 1;
+  string address = 2;
+  double lat = 3;
+  double lng = 4;
+  bool is_default = 5;
+}
+
+message UpdateDeliveryAddressRequest {
+  string id = 1;
+  string label = 2;
+  string address = 3;
+  double lat = 4;
+  double lng = 5;
+}
+
+message DeleteDeliveryAddressRequest {
+  string id = 1;
+}
+
+message DeleteDeliveryAddressResponse {
+  bool success = 1;
+}
+
+message SetDefaultAddressRequest {
+  string id = 1;
+}
+
+// ==================== 2FA ====================
+
+message Setup2FARequest {}
+
+message Setup2FAResponse {
+  string secret = 1;
+  string qr_code = 2; // Base64 data URI of QR code
+}
+
+message Enable2FARequest {
+  string code = 1; // 6-digit TOTP code to verify setup
+}
+
+message Enable2FAResponse {
+  bool success = 1;
+  repeated string backup_codes = 2;
+}
+
+message Disable2FARequest {
+  string code = 1; // Current TOTP code or backup code
+}
+
+message Disable2FAResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message Verify2FARequest {
+  string two_fa_token = 1; // Temporary token from login
+  string code = 2;         // 6-digit TOTP code
+}
+
+// ==================== Admin User Management ====================
+
+message AdminUser {
+  string id = 1;
+  string email = 2;
+  string role = 3;
+  string name = 4;
+  string phone = 5;
+  bool email_verified = 6;
+  bool two_factor_enabled = 7;
+  bool is_banned = 8;
+  google.protobuf.Timestamp banned_at = 9;
+  string ban_reason = 10;
+  google.protobuf.Timestamp last_login_at = 11;
+  google.protobuf.Timestamp created_at = 12;
+}
+
+message AdminListUsersRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+  string role = 3; // Optional filter by role
+}
+
+message AdminListUsersResponse {
+  repeated AdminUser users = 1;
+  int32 total = 2;
+}
+
+message AdminGetUserRequest {
+  string id = 1;
+}
+
+message AdminUpdateUserRequest {
+  string id = 1;
+  string role = 2;
+  string name = 3;
+  string phone = 4;
+}
+
+message AdminDeleteUserRequest {
+  string id = 1;
+}
+
+message AdminDeleteUserResponse {
+  bool success = 1;
+}
+
+message AdminBanUserRequest {
+  string id = 1;
+  string reason = 2;
+}
+
+message AdminUnbanUserRequest {
+  string id = 1;
+}
+
+message AdminVerifyUserEmailRequest {
+  string id = 1;
+}
+
+message AdminToggleUser2FARequest {
+  string id = 1;
+  string endpoint = 2; // "enable" or "disable"
+}

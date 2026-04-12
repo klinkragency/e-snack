@@ -1,0 +1,1075 @@
+openapi: 3.0.3
+info:
+  title: Beldys Club API
+  description: 'Food ordering platform API supporting delivery, click & collect, and
+    dine-in orders.
+
+
+    ## Authentication
+
+    Most endpoints require a Bearer token in the `Authorization` header.
+
+    Obtain tokens via `/api/v1/auth/login` or `/api/v1/auth/register`.
+
+
+    ## User Roles
+
+    - **admin**: Full access to all admin endpoints
+
+    - **client**: Can place orders, track delivery, leave reviews
+
+    - **livreur**: Can accept deliveries and update location
+
+    '
+  version: 1.0.0
+  contact:
+    name: Beldys Club
+    email: support@beldys.club
+servers:
+- url: http://localhost:8080
+  description: Development server
+- url: https://api.beldys.club
+  description: Production server
+tags:
+- name: Auth
+  description: Authentication and user management
+- name: Restaurants
+  description: Restaurant management (public and admin)
+- name: Menu
+  description: Menu, categories, and products management
+- name: Upload
+  description: File upload service (UploadThing)
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 16
+              message:
+                type: string
+                example: authentication required
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 5
+              message:
+                type: string
+                example: Not Found
+  schemas:
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        role:
+          type: string
+          enum:
+          - admin
+          - client
+          - livreur
+        phone:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    AuthResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+        expires_in:
+          type: integer
+          description: Token expiry in seconds
+        user:
+          $ref: '#/components/schemas/UserProfile'
+    Restaurant:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        logo_url:
+          type: string
+          format: uri
+        banner_url:
+          type: string
+          format: uri
+        address:
+          type: string
+        lat:
+          type: number
+          format: double
+        lng:
+          type: number
+          format: double
+        opening_hours:
+          type: string
+          description: JSON string with opening hours
+        delivery_radius_km:
+          type: number
+          format: double
+        is_active:
+          type: boolean
+        customization:
+          $ref: '#/components/schemas/Customization'
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    Customization:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        restaurant_id:
+          type: string
+          format: uuid
+        primary_color:
+          type: string
+        secondary_color:
+          type: string
+        font:
+          type: string
+        theme:
+          type: string
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        restaurant_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        position:
+          type: integer
+        is_active:
+          type: boolean
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+        created_at:
+          type: string
+          format: date-time
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        category_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+          format: double
+        image_url:
+          type: string
+          format: uri
+        is_available:
+          type: boolean
+        allergens:
+          type: array
+          items:
+            type: string
+        nutritional_info:
+          type: string
+          description: JSON string with nutritional information
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductOption'
+        created_at:
+          type: string
+          format: date-time
+    ProductOption:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        product_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        type:
+          type: string
+          enum:
+          - single
+          - multiple
+        is_required:
+          type: boolean
+        choices:
+          type: array
+          items:
+            $ref: '#/components/schemas/OptionChoice'
+    OptionChoice:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        option_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        price_modifier:
+          type: number
+          format: double
+paths:
+  /api/v1/auth/register:
+    post:
+      tags:
+      - Auth
+      summary: Register a new user
+      description: Create a new user account with email and password
+      operationId: registerUser
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - email
+              - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 6
+                phone:
+                  type: string
+      responses:
+        '200':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Invalid request (email already exists, weak password, etc.)
+  /api/v1/auth/login:
+    post:
+      tags:
+      - Auth
+      summary: Login user
+      description: Authenticate with email and password
+      operationId: loginUser
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - email
+              - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid credentials
+  /api/v1/auth/refresh:
+    post:
+      tags:
+      - Auth
+      summary: Refresh access token
+      description: Get a new access token using refresh token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - refresh_token
+              properties:
+                refresh_token:
+                  type: string
+      responses:
+        '200':
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid or expired refresh token
+      operationId: post_auth_refresh
+      security: []
+  /api/v1/auth/profile:
+    get:
+      tags:
+      - Auth
+      summary: Get user profile
+      description: Retrieve authenticated user's profile
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      operationId: get_auth_profile
+  /api/v1/restaurants:
+    get:
+      tags:
+      - Restaurants
+      summary: List all restaurants
+      description: Get paginated list of restaurants
+      parameters:
+      - name: page
+        in: query
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        schema:
+          type: integer
+          default: 20
+      - name: active_only
+        in: query
+        schema:
+          type: boolean
+          default: true
+      responses:
+        '200':
+          description: List of restaurants
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  restaurants:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Restaurant'
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+                  page_size:
+                    type: integer
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+      operationId: get_restaurants
+      security: []
+  /api/v1/restaurants/{slug}:
+    get:
+      tags:
+      - Restaurants
+      summary: Get restaurant by slug
+      parameters:
+      - name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Restaurant details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Restaurant'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+      operationId: get_restaurants_by_slug
+      security: []
+  /api/v1/admin/restaurants:
+    post:
+      tags:
+      - Restaurants
+      summary: Create restaurant (Admin only)
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              - slug
+              - address
+              - lat
+              - lng
+              properties:
+                name:
+                  type: string
+                slug:
+                  type: string
+                description:
+                  type: string
+                address:
+                  type: string
+                lat:
+                  type: number
+                  format: double
+                lng:
+                  type: number
+                  format: double
+                opening_hours:
+                  type: string
+                delivery_radius_km:
+                  type: number
+                  format: double
+      responses:
+        '200':
+          description: Restaurant created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Restaurant'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      operationId: post_admin_restaurants
+  /api/v1/admin/restaurants/{id}:
+    put:
+      tags:
+      - Restaurants
+      summary: Update restaurant (Admin only)
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                slug:
+                  type: string
+                description:
+                  type: string
+                logo_url:
+                  type: string
+                banner_url:
+                  type: string
+                address:
+                  type: string
+                lat:
+                  type: number
+                lng:
+                  type: number
+                opening_hours:
+                  type: string
+                delivery_radius_km:
+                  type: number
+                is_active:
+                  type: boolean
+      responses:
+        '200':
+          description: Restaurant updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Restaurant'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+      operationId: put_admin_restaurants_by_id
+  /api/v1/admin/restaurants/{restaurant_id}/customization:
+    put:
+      tags:
+      - Restaurants
+      summary: Update restaurant customization (Admin only)
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: restaurant_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                primary_color:
+                  type: string
+                secondary_color:
+                  type: string
+                font:
+                  type: string
+                theme:
+                  type: string
+      responses:
+        '200':
+          description: Customization updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customization'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      operationId: put_admin_restaurants_by_restaurant_id_customization
+  /api/v1/restaurants/{restaurant_slug}/menu:
+    get:
+      tags:
+      - Menu
+      summary: Get restaurant menu
+      description: Get full menu with categories and products
+      parameters:
+      - name: restaurant_slug
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Restaurant menu
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  restaurant_id:
+                    type: string
+                  restaurant_name:
+                    type: string
+                  categories:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Category'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+      operationId: get_restaurants_by_restaurant_slug_menu
+      security: []
+  /api/v1/admin/restaurants/{restaurant_id}/categories:
+    post:
+      tags:
+      - Menu
+      summary: Create category (Admin only)
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: restaurant_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+                position:
+                  type: integer
+      responses:
+        '200':
+          description: Category created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      operationId: post_admin_restaurants_by_restaurant_id_categories
+  /api/v1/admin/categories/{id}:
+    put:
+      tags:
+      - Menu
+      summary: Update category (Admin only)
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                position:
+                  type: integer
+                is_active:
+                  type: boolean
+      responses:
+        '200':
+          description: Category updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+      operationId: put_admin_categories_by_id
+    delete:
+      tags:
+      - Menu
+      summary: Delete category (Admin only)
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Category deleted
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+      operationId: delete_admin_categories_by_id
+  /api/v1/admin/categories/{category_id}/products:
+    post:
+      tags:
+      - Menu
+      summary: Create product (Admin only)
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: category_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              - price
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                price:
+                  type: number
+                  format: double
+                image_url:
+                  type: string
+                allergens:
+                  type: array
+                  items:
+                    type: string
+                nutritional_info:
+                  type: string
+      responses:
+        '200':
+          description: Product created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      operationId: post_admin_categories_by_category_id_products
+  /api/v1/admin/products/{id}:
+    put:
+      tags:
+      - Menu
+      summary: Update product (Admin only)
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                price:
+                  type: number
+                image_url:
+                  type: string
+                is_available:
+                  type: boolean
+                allergens:
+                  type: array
+                  items:
+                    type: string
+                nutritional_info:
+                  type: string
+                category_id:
+                  type: string
+                  format: uuid
+                  description: Move the product to a different category. Empty string = keep current.
+                position:
+                  type: integer
+                  description: Position within the category (0-based).
+      responses:
+        '200':
+          description: Product updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+      operationId: put_admin_products_by_id
+    delete:
+      tags:
+      - Menu
+      summary: Delete product (Admin only)
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Product deleted
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+      operationId: delete_admin_products_by_id
+  /api/v1/admin/products/{id}/availability:
+    patch:
+      tags:
+      - Menu
+      summary: Set product availability (Admin only)
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - is_available
+              properties:
+                is_available:
+                  type: boolean
+      responses:
+        '200':
+          description: Availability updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      operationId: patch_admin_products_by_id_availability
+  /api/v1/admin/products/{product_id}/options:
+    post:
+      tags:
+      - Menu
+      summary: Create product option (Admin only)
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: product_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              - type
+              properties:
+                name:
+                  type: string
+                type:
+                  type: string
+                  enum:
+                  - single
+                  - multiple
+                is_required:
+                  type: boolean
+                choices:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      price_modifier:
+                        type: number
+      responses:
+        '200':
+          description: Option created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductOption'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      operationId: post_admin_products_by_product_id_options
+  /api/v1/admin/options/{option_id}/choices:
+    post:
+      tags:
+      - Menu
+      summary: Add option choice (Admin only)
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: option_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+                price_modifier:
+                  type: number
+      responses:
+        '200':
+          description: Choice added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OptionChoice'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      operationId: post_admin_options_by_option_id_choices
+  /api/v1/admin/options/{id}:
+    delete:
+      tags:
+      - Menu
+      summary: Delete product option (Admin only)
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Option deleted
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      operationId: delete_admin_options_by_id
+  /api/v1/upload/presign:
+    post:
+      tags:
+      - Upload
+      summary: Get presigned upload URL
+      description: Generate presigned URL for uploading files to UploadThing
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - content_type
+              - category
+              properties:
+                content_type:
+                  type: string
+                  enum:
+                  - image/jpeg
+                  - image/png
+                  - image/webp
+                category:
+                  type: string
+                  enum:
+                  - restaurant_logo
+                  - restaurant_banner
+                  - product
+                filename:
+                  type: string
+      responses:
+        '200':
+          description: Presigned URL generated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  upload_url:
+                    type: string
+                    description: PUT this URL with file as multipart/form-data
+                  file_key:
+                    type: string
+                    description: File key for confirmation
+                  public_url:
+                    type: string
+                    description: Public CDN URL after upload
+                  expires_in:
+                    type: integer
+                    description: URL expiry in seconds
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '400':
+          description: Invalid content type or category
+      operationId: post_upload_presign
+  /api/v1/upload/confirm:
+    post:
+      tags:
+      - Upload
+      summary: Confirm file upload
+      description: Verify that file was successfully uploaded to UploadThing
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - file_key
+              properties:
+                file_key:
+                  type: string
+      responses:
+        '200':
+          description: Upload confirmation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  exists:
+                    type: boolean
+                  public_url:
+                    type: string
+                  size:
+                    type: integer
+                    description: File size in bytes
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      operationId: post_upload_confirm

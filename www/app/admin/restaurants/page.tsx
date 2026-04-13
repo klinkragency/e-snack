@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Plus, Loader2, Store, Pencil, Settings, ToggleLeft, ToggleRight, Trash2, ChevronUp, ChevronDown } from "lucide-react"
 import { toast } from "sonner"
@@ -9,6 +10,7 @@ import type { Restaurant } from "@/lib/restaurant-types"
 import { cn } from "@/lib/utils"
 
 export default function AdminRestaurantsPage() {
+  const router = useRouter()
   const [restaurants, setRestaurants] = useState<Restaurant[]>([])
   const [loading, setLoading] = useState(true)
   const [deletingId, setDeletingId] = useState<string | null>(null)
@@ -24,6 +26,13 @@ export default function AdminRestaurantsPage() {
   }
 
   useEffect(() => { load() }, [])
+
+  // Mono-restaurant: auto-redirect to menu page when there's exactly one restaurant
+  useEffect(() => {
+    if (!loading && restaurants.length === 1) {
+      router.replace(`/admin/restaurants/${restaurants[0].id}/menu`)
+    }
+  }, [loading, restaurants, router])
 
   const toggleActive = async (r: Restaurant) => {
     try {

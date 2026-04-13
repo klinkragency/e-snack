@@ -659,6 +659,7 @@ export default function AdminOrdersPage() {
 
       {/* Filters */}
       <div className="mt-4 flex flex-col gap-2 sm:mt-6 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+        {restaurants.length > 1 && (
         <div className="relative">
           <select
             value={selectedRestaurant}
@@ -671,6 +672,7 @@ export default function AdminOrdersPage() {
           </select>
           <ChevronDown size={14} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
         </div>
+        )}
 
         {/* Status filter */}
         <div className="flex gap-1 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">

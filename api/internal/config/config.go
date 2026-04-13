@@ -17,13 +17,15 @@ type Config struct {
 	DatabaseURL string
 	RedisURL    string
 
-	JWT    JWTConfig
-	Admin  AdminConfig
-	MinIO  MinIOConfig
-	Mollie MollieConfig
-	OAuth  OAuthConfig
-	Email  EmailConfig
-	OpenAI OpenAIConfig
+	JWT               JWTConfig
+	Admin             AdminConfig
+	InitialAdmin      InitialAdminConfig
+	InitialRestaurant InitialRestaurantConfig
+	MinIO             MinIOConfig
+	Mollie            MollieConfig
+	OAuth             OAuthConfig
+	Email             EmailConfig
+	OpenAI            OpenAIConfig
 }
 
 type OpenAIConfig struct {
@@ -68,6 +70,17 @@ type AdminConfig struct {
 	Password string
 }
 
+type InitialAdminConfig struct {
+	Email    string
+	Password string
+	Name     string
+}
+
+type InitialRestaurantConfig struct {
+	Name string
+	Slug string
+}
+
 const defaultJWTSecret = "change-this-to-a-secure-secret-in-production"
 
 func Load() (*Config, error) {
@@ -110,6 +123,15 @@ func Load() (*Config, error) {
 		Admin: AdminConfig{
 			Email:    getEnv("ADMIN_EMAIL", "admin@example.com"),
 			Password: adminPassword,
+		},
+		InitialAdmin: InitialAdminConfig{
+			Email:    getEnv("INITIAL_ADMIN_EMAIL", ""),
+			Password: getEnv("INITIAL_ADMIN_PASSWORD", ""),
+			Name:     getEnv("INITIAL_ADMIN_NAME", "Admin"),
+		},
+		InitialRestaurant: InitialRestaurantConfig{
+			Name: getEnv("INITIAL_RESTAURANT_NAME", ""),
+			Slug: getEnv("INITIAL_RESTAURANT_SLUG", ""),
 		},
 		MinIO: MinIOConfig{
 			Endpoint:  getEnv("MINIO_ENDPOINT", "minio:9000"),

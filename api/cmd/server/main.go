@@ -133,6 +133,10 @@ func main() {
 		log.Printf("Warning: Failed to seed admin: %v", err)
 	}
 
+	if err := seedInitialData(ctx, userRepo, restaurantRepo, cfg); err != nil {
+		log.Printf("Warning: Failed to seed initial data: %v", err)
+	}
+
 	grpcServer := server.NewGRPCServer(
 		cfg.GRPCPort,
 		authService,
@@ -202,5 +206,92 @@ func seedAdmin(ctx context.Context, userRepo repository.UserRepository, adminCfg
 	}
 
 	log.Printf("Admin user %s created successfully", adminCfg.Email)
+	return nil
+}
+
+// seedInitialData creates the first admin user and restaurant on a fresh
+// database when INITIAL_* env vars are provided. It is idempotent: if an
+// admin user already exists (from any source), the function does nothing.
+func seedInitialData(ctx context.Context, userRepo repository.UserRepository, restaurantRepo repository.RestaurantRepository, cfg *config.Config) error {
+	// Skip if no initial admin email is configured
+	if cfg.InitialAdmin.Email == "" {
+		return nil
+	}
+
+	// Check if any admin already exists
+	admins, _, err := userRepo.List(ctx, 1, 1, "admin")
+	if err != nil {
+		return fmt.Errorf("checking for existing admins: %w", err)
+	}
+	if len(admins) > 0 {
+		return nil // admin already exists, skip seed
+	}
+
+	// --- Seed admin user ---
+	if cfg.InitialAdmin.Password == "" {
+		return fmt.Errorf("INITIAL_ADMIN_PASSWORD must be set when INITIAL_ADMIN_EMAIL is provided")
+	}
+
+	passwordHash, err := auth.HashPassword(cfg.InitialAdmin.Password)
+	if err != nil {
+		return fmt.Errorf("hashing initial admin password: %w", err)
+	}
+
+	adminUser := &repository.User{
+		Email:         cfg.InitialAdmin.Email,
+		PasswordHash:  &passwordHash,
+		Name:          &cfg.InitialAdmin.Name,
+		Role:          "admin",
+		EmailVerified: true,
+	}
+
+	if err := userRepo.Create(ctx, adminUser); err != nil {
+		return fmt.Errorf("creating initial admin user: %w", err)
+	}
+	// Mark email as verified (the Create query may not set this column)
+	if err := userRepo.MarkEmailVerified(ctx, adminUser.ID); err != nil {
+		log.Printf("Warning: could not mark initial admin email as verified: %v", err)
+	}
+
+	log.Printf("Initial admin user %s created", cfg.InitialAdmin.Email)
+
+	// --- Seed restaurant ---
+	if cfg.InitialRestaurant.Name == "" || cfg.InitialRestaurant.Slug == "" {
+		log.Println("Initial restaurant not seeded (INITIAL_RESTAURANT_NAME or INITIAL_RESTAURANT_SLUG not set)")
+		return nil
+	}
+
+	slugExists, err := restaurantRepo.ExistsBySlug(ctx, cfg.InitialRestaurant.Slug)
+	if err != nil {
+		return fmt.Errorf("checking restaurant slug: %w", err)
+	}
+	if slugExists {
+		log.Printf("Restaurant with slug %q already exists, skipping restaurant seed", cfg.InitialRestaurant.Slug)
+		return nil
+	}
+
+	rest := &repository.Restaurant{
+		Name:     cfg.InitialRestaurant.Name,
+		Slug:     cfg.InitialRestaurant.Slug,
+		IsActive: true,
+	}
+
+	if err := restaurantRepo.Create(ctx, rest); err != nil {
+		return fmt.Errorf("creating initial restaurant: %w", err)
+	}
+
+	// Seed default customization for the restaurant
+	customization := &repository.Customization{
+		RestaurantID:   rest.ID,
+		PrimaryColor:   "#000000",
+		SecondaryColor: "#FFFFFF",
+		Font:           "Inter",
+		Theme:          "light",
+	}
+	if err := restaurantRepo.UpsertCustomization(ctx, customization); err != nil {
+		log.Printf("Warning: could not seed default customization: %v", err)
+	}
+
+	log.Printf("Initial restaurant %q (slug: %s) created with default customization", rest.Name, rest.Slug)
 	return nil
 }

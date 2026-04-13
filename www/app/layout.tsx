@@ -9,8 +9,8 @@ import './globals.css'
 const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: "BELDY'S CLUB | Vos restaurants préférés à Monaco",
-  description: 'La plateforme unique pour commander vos marques préférées : Smash Burgers, Tacos, Bowls et Desserts. Livraison rapide à Monaco et alentours.',
+  title: "e-Snack | Commandez vos repas en ligne",
+  description: 'Commandez vos repas en ligne : livraison, click & collect, et sur place.',
   generator: 'v0.app',
   icons: {
     icon: [

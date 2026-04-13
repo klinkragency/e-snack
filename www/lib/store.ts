@@ -123,12 +123,12 @@ export const useAppStore = create<AppState>()(
       reset: () => {
         set({ address: "", cart: [], user: null })
         if (typeof window !== "undefined") {
-          localStorage.removeItem("beldys-store")
+          localStorage.removeItem("esnack-store")
         }
       },
     }),
     {
-      name: "beldys-store",
+      name: "esnack-store",
       onRehydrateStorage: () => (state) => {
         if (state) state._hydrated = true
       },

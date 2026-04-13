@@ -22,7 +22,7 @@ function clearAndRedirect() {
 
   const headers = new Headers()
 
-  // Relative Location — browser resolves against its current origin (beldys.fr)
+  // Relative Location — browser resolves against its current origin
   // NOT against request.url which is the internal Docker URL (0.0.0.0:3000)
   headers.set("Location", "/authentification")
   headers.set("Cache-Control", "no-cache, no-store, must-revalidate")

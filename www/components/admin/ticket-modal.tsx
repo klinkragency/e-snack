@@ -59,7 +59,7 @@ function ClientTicket({ order, restaurantName }: { order: AdminOrder; restaurant
         <div style={{ position: "absolute", top: -20, right: -20, width: 80, height: 80, borderRadius: "50%", background: "rgba(255,255,255,0.04)" }} />
         <div style={{ position: "absolute", bottom: -30, left: -15, width: 100, height: 100, borderRadius: "50%", background: "rgba(255,255,255,0.03)" }} />
         <p style={{ fontSize: 10, letterSpacing: "0.35em", color: "rgba(255,255,255,0.45)", textTransform: "uppercase", marginBottom: 6, position: "relative" }}>
-          Beldys Club · Monaco
+          e-Snack
         </p>
         <p style={{ fontSize: 22, fontWeight: 900, color: "#fff", letterSpacing: "0.03em", textTransform: "uppercase", lineHeight: 1.1, position: "relative" }}>
           {restaurantName}
@@ -235,7 +235,7 @@ function ClientTicket({ order, restaurantName }: { order: AdminOrder; restaurant
           ))}
         </div>
         <p style={{ fontSize: 11, fontWeight: 600, marginBottom: 2 }}>Merci de votre commande 🙏</p>
-        <p style={{ fontSize: 9, color: "#bbb", letterSpacing: "0.15em", textTransform: "uppercase" }}>beldys.fr</p>
+        <p style={{ fontSize: 9, color: "#bbb", letterSpacing: "0.15em", textTransform: "uppercase" }}>e-snack</p>
       </div>
     </div>
   )
@@ -371,7 +371,7 @@ function RestaurantTicket({ order, restaurantName }: { order: AdminOrder; restau
 
       {/* ── Footer ── */}
       <div style={{ borderTop: "1.5px solid #0a0a0a", padding: "8px 20px 12px", textAlign: "center" }}>
-        <p style={{ fontSize: 9, color: "#bbb", letterSpacing: "0.15em", textTransform: "uppercase" }}>Bon cuisine · beldys.fr</p>
+        <p style={{ fontSize: 9, color: "#bbb", letterSpacing: "0.15em", textTransform: "uppercase" }}>Bon cuisine · e-snack</p>
       </div>
     </div>
   )

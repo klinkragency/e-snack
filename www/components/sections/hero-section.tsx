@@ -136,7 +136,7 @@ export function HeroSection() {
             >
               <Image
                 src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=2400&auto=format&fit=crop"
-                alt="Festin Beldys"
+                alt="Festin gourmand"
                 fill
                 className="object-cover"
                 priority

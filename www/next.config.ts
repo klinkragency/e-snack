@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "beldys.fr",
+        hostname: process.env.NEXT_PUBLIC_DOMAIN || "localhost",
       },
       {
         protocol: "https",

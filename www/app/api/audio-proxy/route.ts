@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
     "pub-16dc87b31cc34db88feace41a8d406ce.r2.dev",
     "minio",
     "localhost",
-    "beldys.fr",
+    process.env.NEXT_PUBLIC_DOMAIN || "localhost",
   ]
   const isAllowed = allowedHosts.some((h) => parsed.hostname === h || parsed.hostname.endsWith(`.${h}`))
   if (!isAllowed) {

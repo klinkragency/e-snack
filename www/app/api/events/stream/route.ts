@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic"
 export const runtime = "nodejs"
 
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379"
-const ADMIN_EVENTS_CHAN = "beldys:admin:events"
+const ADMIN_EVENTS_CHAN = "esnack:admin:events"
 
 // ─── Singleton pub/sub manager ───────────────────────────────────────────────
 // One shared Redis subscriber for the entire Node.js process.

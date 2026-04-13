@@ -118,8 +118,8 @@ export default function FacturePage({ params }: { params: Promise<{ id: string }
           {/* Header */}
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="text-2xl font-bold tracking-tight">Beldys</h1>
-              <p className="mt-0.5 text-xs text-muted-foreground">beldys.fr</p>
+              <h1 className="text-2xl font-bold tracking-tight">e-Snack</h1>
+              <p className="mt-0.5 text-xs text-muted-foreground">e-snack</p>
             </div>
             <div className="text-right">
               <p className="text-lg font-bold text-foreground">Facture</p>
@@ -231,7 +231,7 @@ export default function FacturePage({ params }: { params: Promise<{ id: string }
 
           {/* Footer */}
           <p className="mt-8 text-center text-[11px] text-muted-foreground">
-            Merci pour votre commande · Beldys, Monaco
+            Merci pour votre commande
           </p>
         </div>
       </div>

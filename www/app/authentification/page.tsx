@@ -256,6 +256,8 @@ export default function AuthentificationPage() {
                 </div>
 
                 {/* Google OAuth redirect button */}
+                {process.env.NEXT_PUBLIC_GOOGLE_OAUTH_ENABLED === "true" && (
+                <>
                 <button
                   type="button"
                   onClick={() => { window.location.href = buildGoogleOAuthUrl() }}
@@ -277,6 +279,8 @@ export default function AuthentificationPage() {
                   <span className="text-[11px] text-muted-foreground uppercase tracking-wider">ou</span>
                   <div className="h-px flex-1 bg-border" />
                 </div>
+                </>
+                )}
 
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="space-y-3" noValidate>

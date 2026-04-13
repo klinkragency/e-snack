@@ -207,7 +207,17 @@ export default function RestaurantPage({ params }: { params: Promise<{ slug: str
 
         {/* Products */}
         <div className="px-4 pb-32 md:px-6">
-          {categories.map((cat) => (
+          {categories.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <p className="text-lg font-medium" style={{ color: "var(--restaurant-text)" }}>
+                Menu en cours de preparation
+              </p>
+              <p className="mt-2 text-sm" style={{ color: "var(--restaurant-muted)" }}>
+                Revenez bientot !
+              </p>
+            </div>
+          ) : (
+          categories.map((cat) => (
             <div
               key={cat.id}
               ref={(el) => { sectionRefs.current[cat.name] = el }}
@@ -245,7 +255,8 @@ export default function RestaurantPage({ params }: { params: Promise<{ slug: str
                   ))}
               </div>
             </div>
-          ))}
+          ))
+          )}
         </div>
 
         {/* Sticky Cart Bar */}

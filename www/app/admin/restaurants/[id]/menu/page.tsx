@@ -341,6 +341,7 @@ export default function MenuManagementPage({ params }: { params: Promise<{ id: s
             <ListTree size={16} />
             <span className="hidden sm:inline">Organiser</span>
           </button>
+          {process.env.NEXT_PUBLIC_AI_IMPORT_ENABLED === "true" && (
           <button
             onClick={() => setShowImportModal(true)}
             className="inline-flex items-center gap-2 rounded-full border border-foreground/20 px-5 py-2.5 text-sm font-semibold transition-colors hover:bg-foreground/5"
@@ -348,6 +349,7 @@ export default function MenuManagementPage({ params }: { params: Promise<{ id: s
             <FileJson size={16} />
             <span className="hidden sm:inline">Importer JSON</span>
           </button>
+          )}
         </div>
       </div>
 

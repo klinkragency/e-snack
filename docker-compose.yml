@@ -3,15 +3,15 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-beldys}
+      POSTGRES_USER: ${POSTGRES_USER:-esnack}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB:-beldys_db}
+      POSTGRES_DB: ${POSTGRES_DB:-esnack_db}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U beldys -d beldys_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-esnack} -d ${POSTGRES_DB:-esnack_db}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -35,7 +35,7 @@ services:
         condition: service_healthy
     volumes:
       - ./api/migrations:/migrations
-    command: ["-path", "/migrations", "-database", "postgres://${POSTGRES_USER:-beldys}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-beldys_db}?sslmode=disable", "up"]
+    command: ["-path", "/migrations", "-database", "postgres://${POSTGRES_USER:-esnack}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-esnack_db}?sslmode=disable", "up"]
 
   api:
     build:
@@ -53,26 +53,26 @@ services:
       ENV: production
       HTTP_PORT: "8080"
       GRPC_PORT: "50051"
-      DATABASE_URL: postgres://${POSTGRES_USER:-beldys}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-beldys_db}?sslmode=disable
+      DATABASE_URL: postgres://${POSTGRES_USER:-esnack}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-esnack_db}?sslmode=disable
       REDIS_URL: redis://redis:6379
       JWT_SECRET: ${JWT_SECRET}
-      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@beldys.club}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
-      ALLOWED_ORIGIN: ${ALLOWED_ORIGIN:-https://beldys.club}
+      ALLOWED_ORIGIN: ${ALLOWED_ORIGIN}
       MINIO_ENDPOINT: ${MINIO_ENDPOINT}
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
-      MINIO_BUCKET: ${MINIO_BUCKET:-beldys}
+      MINIO_BUCKET: ${MINIO_BUCKET:-uploads}
       MINIO_USE_SSL: ${MINIO_USE_SSL:-true}
       MINIO_PUBLIC_URL: ${MINIO_PUBLIC_URL}
       MOLLIE_API_KEY: ${MOLLIE_API_KEY:-}
-      PUBLIC_URL: https://beldys.fr
+      PUBLIC_URL: ${PUBLIC_URL}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       EMAIL_PROVIDER: ${EMAIL_PROVIDER:-smtp}
       EMAIL_API_KEY: ${EMAIL_API_KEY:-}
-      EMAIL_FROM: ${EMAIL_FROM:-noreply@beldys.fr}
-      EMAIL_FROM_NAME: ${EMAIL_FROM_NAME:-Beldys Club}
+      EMAIL_FROM: ${EMAIL_FROM}
+      EMAIL_FROM_NAME: ${EMAIL_FROM_NAME:-e-Snack}
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8080/healthz"]
       interval: 10s
@@ -82,7 +82,7 @@ services:
 
   frontend:
     build:
-      context: ./frontendmvp/www
+      context: ./www
       dockerfile: Dockerfile
       args:
         BACKEND_URL: http://api:8080
@@ -95,7 +95,7 @@ services:
         condition: service_healthy
     environment:
       BACKEND_URL: http://api:8080
-      COOKIE_DOMAIN: .beldys.fr
+      COOKIE_DOMAIN: ${COOKIE_DOMAIN}
       REDIS_URL: redis://redis:6379
       POSTHOG_PERSONAL_API_KEY: ${POSTHOG_PERSONAL_API_KEY:-}
       POSTHOG_PROJECT_ID: ${POSTHOG_PROJECT_ID:-}
@@ -113,6 +113,8 @@ services:
     depends_on:
       - frontend
       - api
+    environment:
+      DOMAIN: ${DOMAIN}
 
 volumes:
   postgres_data:

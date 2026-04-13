@@ -1,6 +1,6 @@
-# Beldys Club API Documentation
+# e-Snack API Documentation
 
-This directory contains the API documentation for the Beldys Club platform.
+This directory contains the API documentation for the e-Snack platform.
 
 ## OpenAPI Specification
 
@@ -28,7 +28,7 @@ You can view the OpenAPI documentation using:
 ## API Base URLs
 
 - **Development**: `http://localhost:8080`
-- **Production**: `https://api.beldys.club` (when deployed)
+- **Production**: Configured via `$DOMAIN` environment variable
 
 ## Authentication
 

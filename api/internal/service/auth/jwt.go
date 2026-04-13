@@ -66,7 +66,7 @@ func (m *JWTManager) generateToken(userID, role string, expiry time.Duration) (s
 			ID:        uuid.New().String(),
 			IssuedAt:  jwt.NewNumericDate(now),
 			ExpiresAt: jwt.NewNumericDate(now.Add(expiry)),
-			Issuer:    "beldys-api",
+			Issuer:    "esnack-api",
 		},
 	}
 

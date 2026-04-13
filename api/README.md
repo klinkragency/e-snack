@@ -1,4 +1,4 @@
-# Beldys Club API
+# e-Snack API
 
 Food ordering platform API (like Uber Eats) supporting delivery, click & collect, and dine-in orders.
 
@@ -202,7 +202,7 @@ GRPC_PORT=50051
 HTTP_PORT=8080
 
 # Database
-DATABASE_URL=postgres://user:pass@localhost:5432/beldys_db?sslmode=disable
+DATABASE_URL=postgres://user:pass@localhost:5432/esnack_db?sslmode=disable
 
 # Redis
 REDIS_URL=redis://localhost:6379
@@ -231,4 +231,4 @@ UPLOADTHING_SECRET=your-uploadthing-secret
 
 ## 📞 Support
 
-For issues and questions, please open an issue on GitHub or contact support@beldys.club.
+For issues and questions, please open an issue on GitHub.

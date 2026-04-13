@@ -269,8 +269,8 @@ curl -s http://localhost:8080/api/v1/auth/verify-email/send \
 # .env
 EMAIL_PROVIDER=sendgrid
 EMAIL_API_KEY=SG.your-api-key-here
-EMAIL_FROM=noreply@beldys.club
-EMAIL_FROM_NAME=Beldys Club
+EMAIL_FROM=noreply@example.com
+EMAIL_FROM_NAME=e-Snack
 ```
 
 ### 2. Implémenter SendGrid (TODO)

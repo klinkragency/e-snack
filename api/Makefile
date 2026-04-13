@@ -6,7 +6,7 @@ GOBUILD=$(GOCMD) build
 GORUN=$(GOCMD) run
 GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
-BINARY_NAME=beldys-api
+BINARY_NAME=esnack-api
 MAIN_PATH=./cmd/server
 
 # Proto parameters
@@ -14,7 +14,7 @@ PROTO_DIR=proto
 GEN_DIR=gen
 
 # Database
-DATABASE_URL?=postgres://beldys:beldys_secret@localhost:5432/beldys_db?sslmode=disable
+DATABASE_URL?=postgres://esnack:esnack_secret@localhost:5432/esnack_db?sslmode=disable
 MIGRATIONS_DIR=migrations
 
 # Build the application
@@ -128,12 +128,12 @@ docs-swagger:
 	docker run -d -p 8082:8080 \
 		-e SWAGGER_JSON=/docs/openapi.yaml \
 		-v $(PWD)/docs:/docs \
-		--name beldys-swagger \
+		--name esnack-swagger \
 		swaggerapi/swagger-ui
 	@echo "Swagger UI is running at http://localhost:8082"
 	@echo "To stop: make docs-swagger-stop"
 
 docs-swagger-stop:
-	@docker stop beldys-swagger 2>/dev/null || true
-	@docker rm beldys-swagger 2>/dev/null || true
+	@docker stop esnack-swagger 2>/dev/null || true
+	@docker rm esnack-swagger 2>/dev/null || true
 	@echo "Swagger UI stopped"

@@ -29,7 +29,7 @@ import (
 	uploadv1 "github.com/klinkragency/e-snack/gen/upload/v1"
 )
 
-const maintenanceRedisKey = "beldys:maintenance"
+const maintenanceRedisKey = "esnack:maintenance"
 
 type MaintenanceStatus struct {
 	Enabled   bool   `json:"enabled"`

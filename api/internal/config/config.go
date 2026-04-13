@@ -100,7 +100,7 @@ func Load() (*Config, error) {
 		GRPCPort:      getEnv("GRPC_PORT", "50051"),
 		HTTPPort:      getEnv("HTTP_PORT", "8080"),
 		AllowedOrigin: getEnv("ALLOWED_ORIGIN", ""),
-		DatabaseURL: getEnv("DATABASE_URL", "postgres://beldys:beldys_secret@localhost:5432/beldys_db?sslmode=disable"),
+		DatabaseURL: getEnv("DATABASE_URL", "postgres://esnack:esnack_secret@localhost:5432/esnack_db?sslmode=disable"),
 		RedisURL:    getEnv("REDIS_URL", "redis://localhost:6379"),
 		JWT: JWTConfig{
 			Secret:        jwtSecret,
@@ -108,16 +108,16 @@ func Load() (*Config, error) {
 			RefreshExpiry: refreshExpiry,
 		},
 		Admin: AdminConfig{
-			Email:    getEnv("ADMIN_EMAIL", "admin@beldys.club"),
+			Email:    getEnv("ADMIN_EMAIL", "admin@example.com"),
 			Password: adminPassword,
 		},
 		MinIO: MinIOConfig{
 			Endpoint:  getEnv("MINIO_ENDPOINT", "minio:9000"),
 			AccessKey: getEnv("MINIO_ACCESS_KEY", "minioadmin"),
 			SecretKey: getEnv("MINIO_SECRET_KEY", "minioadmin"),
-			Bucket:    getEnv("MINIO_BUCKET", "beldys"),
+			Bucket:    getEnv("MINIO_BUCKET", "uploads"),
 			UseSSL:    getEnv("MINIO_USE_SSL", "false") == "true",
-			PublicURL: getEnv("MINIO_PUBLIC_URL", "http://localhost:9000/beldys"),
+			PublicURL: getEnv("MINIO_PUBLIC_URL", "http://localhost:9000/uploads"),
 		},
 		Mollie: MollieConfig{
 			APIKey:    getEnv("MOLLIE_API_KEY", ""),
@@ -132,8 +132,8 @@ func Load() (*Config, error) {
 		Email: EmailConfig{
 			Provider:  getEnv("EMAIL_PROVIDER", "smtp"),
 			APIKey:    getEnv("EMAIL_API_KEY", ""),
-			FromEmail: getEnv("EMAIL_FROM", "noreply@beldys.club"),
-			FromName:  getEnv("EMAIL_FROM_NAME", "Beldys Club"),
+			FromEmail: getEnv("EMAIL_FROM", "noreply@example.com"),
+			FromName:  getEnv("EMAIL_FROM_NAME", "e-Snack"),
 			SMTPHost:  getEnv("SMTP_HOST", "localhost"),
 			SMTPPort:  getEnv("SMTP_PORT", "1025"),
 		},

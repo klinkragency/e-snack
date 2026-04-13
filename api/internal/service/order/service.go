@@ -65,7 +65,7 @@ type Service struct {
 	wsHub          WebSocketHub  // optional, for real-time WS broadcasts
 }
 
-const adminEventsChan = "beldys:admin:events"
+const adminEventsChan = "esnack:admin:events"
 
 func (s *Service) publishAdminEvent(ctx context.Context, eventType, orderID, restaurantName, orderStatus string) {
 	if s.redisClient == nil {

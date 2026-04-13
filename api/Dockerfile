@@ -9,16 +9,16 @@ RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o /beldys-api ./cmd/server
+RUN CGO_ENABLED=0 GOOS=linux go build -o /esnack-api ./cmd/server
 
 # --- Runtime ---
 FROM alpine:3.21
 
 RUN apk add --no-cache ca-certificates tzdata
 
-COPY --from=builder /beldys-api /beldys-api
+COPY --from=builder /esnack-api /esnack-api
 COPY --from=builder /app/migrations /migrations
 
 EXPOSE 8080 50051
 
-CMD ["/beldys-api"]
+CMD ["/esnack-api"]

@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package beldys.upload.v1;
+package esnack.upload.v1;
 
 option go_package = "github.com/klinkragency/e-snack/gen/upload/v1;uploadv1";
 

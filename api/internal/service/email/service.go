@@ -29,13 +29,13 @@ func NewResendService(apiKey, from string) EmailService {
 }
 
 func (s *resendService) SendVerificationCode(ctx context.Context, to, code string) error {
-	subject := "Vérifiez votre email - Beldys Club"
+	subject := "Vérifiez votre email"
 	html := fmt.Sprintf(verificationTemplate, code)
 	return s.send(to, subject, html)
 }
 
 func (s *resendService) SendPasswordResetCode(ctx context.Context, to, code string) error {
-	subject := "Réinitialisez votre mot de passe - Beldys Club"
+	subject := "Réinitialisez votre mot de passe"
 	html := fmt.Sprintf(passwordResetTemplate, code)
 	return s.send(to, subject, html)
 }
@@ -92,13 +92,13 @@ func NewSMTPService(host, port, from, name string) EmailService {
 }
 
 func (s *smtpService) SendVerificationCode(ctx context.Context, to, code string) error {
-	subject := "Vérifiez votre email - Beldys Club"
+	subject := "Vérifiez votre email"
 	html := fmt.Sprintf(verificationTemplate, code)
 	return s.send(to, subject, html)
 }
 
 func (s *smtpService) SendPasswordResetCode(ctx context.Context, to, code string) error {
-	subject := "Réinitialisez votre mot de passe - Beldys Club"
+	subject := "Réinitialisez votre mot de passe"
 	html := fmt.Sprintf(passwordResetTemplate, code)
 	return s.send(to, subject, html)
 }

@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package beldys.menu.v1;
+package esnack.menu.v1;
 
 option go_package = "github.com/klinkragency/e-snack/gen/menu/v1;menuv1";
 

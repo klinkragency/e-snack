@@ -17,7 +17,7 @@ const verificationTemplate = `<!DOCTYPE html>
 <body>
 	<div class="container">
 		<div class="header">
-			<h1>BELDY'S CLUB</h1>
+			<h1>e-Snack</h1>
 		</div>
 		<div class="content">
 			<p>Bonjour,</p>
@@ -30,7 +30,7 @@ const verificationTemplate = `<!DOCTYPE html>
 			</div>
 		</div>
 		<div class="footer">
-			<p>Beldys Club - Votre plateforme de commande en ligne</p>
+			<p>Votre plateforme de commande en ligne</p>
 			<p>Si vous n'avez pas créé de compte, ignorez cet email.</p>
 		</div>
 	</div>
@@ -55,7 +55,7 @@ const passwordResetTemplate = `<!DOCTYPE html>
 <body>
 	<div class="container">
 		<div class="header">
-			<h1>BELDY'S CLUB</h1>
+			<h1>e-Snack</h1>
 		</div>
 		<div class="content">
 			<p>Bonjour,</p>
@@ -72,7 +72,7 @@ const passwordResetTemplate = `<!DOCTYPE html>
 			</div>
 		</div>
 		<div class="footer">
-			<p>Beldys Club - Votre plateforme de commande en ligne</p>
+			<p>Votre plateforme de commande en ligne</p>
 		</div>
 	</div>
 </body>

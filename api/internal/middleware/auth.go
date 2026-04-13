@@ -13,19 +13,19 @@ import (
 
 var publicMethods = map[string]bool{
 	// Auth - public
-	"/beldys.auth.v1.AuthService/Register":          true,
-	"/beldys.auth.v1.AuthService/Login":             true,
-	"/beldys.auth.v1.AuthService/RefreshToken":      true,
-	"/beldys.auth.v1.AuthService/OAuthLogin":        true,
-	"/beldys.auth.v1.AuthService/ForgotPassword":    true,
-	"/beldys.auth.v1.AuthService/VerifyResetCode":   true,
-	"/beldys.auth.v1.AuthService/ResetPassword":     true,
-	"/beldys.auth.v1.AuthService/Verify2FA":         true,
+	"/esnack.auth.v1.AuthService/Register":          true,
+	"/esnack.auth.v1.AuthService/Login":             true,
+	"/esnack.auth.v1.AuthService/RefreshToken":      true,
+	"/esnack.auth.v1.AuthService/OAuthLogin":        true,
+	"/esnack.auth.v1.AuthService/ForgotPassword":    true,
+	"/esnack.auth.v1.AuthService/VerifyResetCode":   true,
+	"/esnack.auth.v1.AuthService/ResetPassword":     true,
+	"/esnack.auth.v1.AuthService/Verify2FA":         true,
 	// Restaurant - public read
-	"/beldys.restaurant.v1.RestaurantService/GetRestaurant":   true,
-	"/beldys.restaurant.v1.RestaurantService/ListRestaurants": true,
+	"/esnack.restaurant.v1.RestaurantService/GetRestaurant":   true,
+	"/esnack.restaurant.v1.RestaurantService/ListRestaurants": true,
 	// Menu - public read
-	"/beldys.menu.v1.MenuService/GetMenu": true,
+	"/esnack.menu.v1.MenuService/GetMenu": true,
 }
 
 type AuthInterceptor struct {

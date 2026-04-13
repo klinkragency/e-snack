@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package beldys.payment.v1;
+package esnack.payment.v1;
 
 option go_package = "github.com/klinkragency/e-snack/gen/payment/v1;paymentv1";
 
@@ -33,7 +33,7 @@ service PaymentService {
 
 message CreatePaymentRequest {
   string order_id = 1;
-  string redirect_url = 2; // Custom deep link for mobile (e.g. beldys:// or exp://)
+  string redirect_url = 2; // Custom deep link for mobile (e.g. esnack:// or exp://)
 }
 
 message PaymentResponse {

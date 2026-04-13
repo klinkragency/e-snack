@@ -88,7 +88,7 @@ func (s *Service) CreatePayment(ctx context.Context, req *paymentv1.CreatePaymen
 	payment, err := s.mollieClient.CreatePayment(&mollie.CreatePaymentParams{
 		Amount:      amountStr,
 		Currency:    "EUR",
-		Description: fmt.Sprintf("Beldys Commande #%s", order.ID[:8]),
+		Description: fmt.Sprintf("Commande #%s", order.ID[:8]),
 		OrderID:     order.ID,
 		RedirectURL: redirectURL,
 		WebhookURL:  fmt.Sprintf("%s/api/v1/webhook/mollie", s.publicURL),
@@ -169,7 +169,7 @@ func (s *Service) RefundPayment(ctx context.Context, req *paymentv1.RefundPaymen
 		amountStr = fmt.Sprintf("%.2f", order.Total)
 	}
 
-	description := "Remboursement Beldys"
+	description := "Remboursement commande"
 	if req.Reason != "" {
 		description = req.Reason
 	}

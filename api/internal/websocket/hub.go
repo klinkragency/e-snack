@@ -85,7 +85,7 @@ func NewHub(redisClient *redis.Client) *Hub {
 		unregister:         make(chan *Client, 256),
 		broadcast:          make(chan *BroadcastMessage, 256),
 		redis:              redisClient,
-		pubsubChan:         "beldys:ws:delivery",
+		pubsubChan:         "esnack:ws:delivery",
 		ctx:                ctx,
 		cancelFunc:         cancel,
 	}

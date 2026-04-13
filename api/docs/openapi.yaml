@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Beldys Club API
+  title: e-Snack API
   description: 'Food ordering platform API supporting delivery, click & collect, and
     dine-in orders.
 
@@ -23,12 +23,12 @@ info:
     '
   version: 1.0.0
   contact:
-    name: Beldys Club
-    email: support@beldys.club
+    name: e-Snack
+    email: support@example.com
 servers:
 - url: http://localhost:8080
   description: Development server
-- url: https://api.beldys.club
+- url: https://api.example.com
   description: Production server
 tags:
 - name: Auth

@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package beldys.auth.v1;
+package esnack.auth.v1;
 
 option go_package = "github.com/klinkragency/e-snack/gen/auth/v1;authv1";
 

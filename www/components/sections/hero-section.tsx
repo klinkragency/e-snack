@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState, useCallback } from "react";
 
-const word = "BELDY'S";
+const word = "e-SNACK";
 
 const sideImages = [
   {

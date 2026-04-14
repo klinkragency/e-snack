@@ -148,7 +148,7 @@ export default function AuthentificationPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/10" />
         <div className="absolute inset-x-0 bottom-0 z-10 p-12">
-          <p className="text-xs font-semibold uppercase tracking-widest text-white/50 mb-3">BELDY&apos;S CLUB</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-white/50 mb-3">e-SNACK</p>
           <h2 className="text-4xl font-bold text-white leading-tight">
             Une seule plateforme.<br />Quatre univers culinaires.
           </h2>
@@ -169,7 +169,7 @@ export default function AuthentificationPage() {
             <ArrowLeft size={15} />
             Retour
           </Link>
-          <span className="text-sm font-bold tracking-tight">BELDY&apos;S CLUB</span>
+          <span className="text-sm font-bold tracking-tight">e-SNACK</span>
         </div>
 
         {/* Form — vertically centered */}

@@ -34,7 +34,7 @@ export function AppHeader() {
                 <Home size={18} />
               </Link>
               <Link href="/restaurants" className="text-lg font-bold tracking-tight">
-                BELDY&apos;S
+                e-SNACK
               </Link>
             </div>
 

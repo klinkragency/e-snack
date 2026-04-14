@@ -41,7 +41,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             {maintenance.message || "Nous effectuons une mise a jour. Revenez dans quelques instants."}
           </p>
           <div className="pt-4">
-            <p className="text-xs text-muted-foreground">BELDY&apos;S CLUB</p>
+            <p className="text-xs text-muted-foreground">e-SNACK</p>
           </div>
         </div>
       </div>

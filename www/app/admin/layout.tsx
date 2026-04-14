@@ -116,7 +116,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             B
           </div>
           <div>
-            <p className="text-sm font-bold tracking-tight leading-none">BELDY&apos;S</p>
+            <p className="text-sm font-bold tracking-tight leading-none">e-SNACK</p>
             <p className="text-[10px] text-muted-foreground tracking-widest uppercase mt-0.5">Admin</p>
           </div>
         </div>

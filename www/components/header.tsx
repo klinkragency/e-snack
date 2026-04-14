@@ -55,7 +55,7 @@ export function Header() {
                 isMenuOpen ? "text-black" : isScrolled ? "text-foreground" : "text-white"
               )}
             >
-              BELDY&apos;S
+              e-SNACK
             </Link>
 
             {/* Desktop center link */}
@@ -143,7 +143,7 @@ export function Header() {
         )}
       >
         <div className="flex h-16 items-center justify-between px-6 border-b border-border/40">
-          <span className="text-base font-bold tracking-widest uppercase text-black">BELDY&apos;S</span>
+          <span className="text-base font-bold tracking-widest uppercase text-black">e-SNACK</span>
           <button
             type="button"
             onClick={() => setIsMenuOpen(false)}

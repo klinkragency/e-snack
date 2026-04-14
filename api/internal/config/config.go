@@ -18,7 +18,6 @@ type Config struct {
 	RedisURL    string
 
 	JWT               JWTConfig
-	Admin             AdminConfig
 	InitialAdmin      InitialAdminConfig
 	InitialRestaurant InitialRestaurantConfig
 	MinIO             MinIOConfig
@@ -65,11 +64,6 @@ type JWTConfig struct {
 	RefreshExpiry time.Duration
 }
 
-type AdminConfig struct {
-	Email    string
-	Password string
-}
-
 type InitialAdminConfig struct {
 	Email    string
 	Password string
@@ -103,9 +97,9 @@ func Load() (*Config, error) {
 		return nil, fmt.Errorf("CRITICAL: JWT_SECRET must be set in production (do not use default)")
 	}
 
-	adminPassword := getEnv("ADMIN_PASSWORD", "admin123")
-	if env == "production" && len(adminPassword) < 12 {
-		return nil, fmt.Errorf("CRITICAL: ADMIN_PASSWORD must be at least 12 characters in production")
+	initialAdminPassword := getEnv("INITIAL_ADMIN_PASSWORD", "")
+	if env == "production" && initialAdminPassword != "" && len(initialAdminPassword) < 12 {
+		return nil, fmt.Errorf("CRITICAL: INITIAL_ADMIN_PASSWORD must be at least 12 characters in production")
 	}
 
 	return &Config{
@@ -120,13 +114,9 @@ func Load() (*Config, error) {
 			AccessExpiry:  accessExpiry,
 			RefreshExpiry: refreshExpiry,
 		},
-		Admin: AdminConfig{
-			Email:    getEnv("ADMIN_EMAIL", "admin@example.com"),
-			Password: adminPassword,
-		},
 		InitialAdmin: InitialAdminConfig{
 			Email:    getEnv("INITIAL_ADMIN_EMAIL", ""),
-			Password: getEnv("INITIAL_ADMIN_PASSWORD", ""),
+			Password: initialAdminPassword,
 			Name:     getEnv("INITIAL_ADMIN_NAME", "Admin"),
 		},
 		InitialRestaurant: InitialRestaurantConfig{

@@ -8,7 +8,7 @@ export function TestimonialsSection() {
       {/* Large Text Statement */}
       <div className="px-6 py-24 md:px-12 md:py-32 lg:px-20 lg:py-40">
         <p className="mx-auto max-w-5xl text-2xl leading-relaxed text-foreground md:text-3xl lg:text-[2.5rem] lg:leading-snug">
-          Sorties, restos, events, spots stylés — BELDY'S CLUB, c'est la communauté qui aime sortir, découvrir, partager et vivre Monaco à 100%. Join the vibe. 🚀
+          Sorties, restos, events, spots stylés — e-SNACK, c'est la communauté qui aime sortir, découvrir, partager et vivre Monaco à 100%. Join the vibe. 🚀
         </p>
       </div>
 

@@ -26,7 +26,7 @@ export function AppSection() {
 
             {/* Description */}
             <p className="mt-6 max-w-md text-muted-foreground">
-              Retrouve tous tes restaurants Beldy's Club dans ta poche. Commande plus vite, profite d'offres exclusives et suis tes livraisons en temps réel.
+              Retrouve tous tes restaurants e-Snack dans ta poche. Commande plus vite, profite d'offres exclusives et suis tes livraisons en temps réel.
             </p>
 
             {/* Features */}

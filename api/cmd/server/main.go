@@ -129,10 +129,6 @@ func main() {
 	paymentService := payment.NewService(mollieClient, orderRepo, webhookRepo, cfg.Mollie.PublicURL)
 	deliveryService := delivery.NewService(driverRepo, orderRepo, restaurantRepo, userRepo, wsHub)
 
-	if err := seedAdmin(ctx, userRepo, cfg.Admin); err != nil {
-		log.Printf("Warning: Failed to seed admin: %v", err)
-	}
-
 	if err := seedInitialData(ctx, userRepo, restaurantRepo, cfg); err != nil {
 		log.Printf("Warning: Failed to seed initial data: %v", err)
 	}
@@ -178,35 +174,6 @@ func main() {
 	grpcServer.Stop()
 	gatewayServer.Stop(ctx)
 	log.Println("Servers stopped")
-}
-
-func seedAdmin(ctx context.Context, userRepo repository.UserRepository, adminCfg config.AdminConfig) error {
-	exists, err := userRepo.ExistsByEmail(ctx, adminCfg.Email)
-	if err != nil {
-		return err
-	}
-	if exists {
-		log.Printf("Admin user %s already exists", adminCfg.Email)
-		return nil
-	}
-
-	passwordHash, err := auth.HashPassword(adminCfg.Password)
-	if err != nil {
-		return err
-	}
-
-	user := &repository.User{
-		Email:        adminCfg.Email,
-		PasswordHash: &passwordHash,
-		Role:         "admin",
-	}
-
-	if err := userRepo.Create(ctx, user); err != nil {
-		return err
-	}
-
-	log.Printf("Admin user %s created successfully", adminCfg.Email)
-	return nil
 }
 
 // seedInitialData creates the first admin user and restaurant on a fresh

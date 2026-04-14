@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	totpIssuer       = "Beldy's Club"
+	totpIssuer       = "e-Snack"
 	backupCodeCount  = 8
 	backupCodeLength = 8
 	twoFATokenTTL    = 5 * time.Minute

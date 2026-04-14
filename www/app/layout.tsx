@@ -1,17 +1,34 @@
 import React from "react"
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Instrument_Serif, Geist, JetBrains_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { Toaster } from 'sonner'
 import { PostHogProvider } from './providers'
 import './globals.css'
 
-const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
+const serif = Instrument_Serif({
+  subsets: ['latin'],
+  weight: '400',
+  style: ['normal', 'italic'],
+  variable: '--font-serif',
+  display: 'swap',
+})
+
+const sans = Geist({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  display: 'swap',
+})
+
+const mono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
-  title: "e-Snack | Commandez vos repas en ligne",
-  description: 'Commandez vos repas en ligne : livraison, click & collect, et sur place.',
-  generator: 'v0.app',
+  title: "e-Snack — Plateforme de commande clé-en-main",
+  description: "Votre restaurant en ligne en 5 minutes. Livraison, Click & Collect, dine-in via QR code.",
   icons: {
     icon: [
       {
@@ -37,8 +54,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased`}>
+    <html lang="fr" className={`${serif.variable} ${sans.variable} ${mono.variable}`}>
+      <body className="font-sans antialiased">
         <PostHogProvider>
           {children}
           <Toaster position="top-center" richColors />

@@ -75,9 +75,18 @@
 }
 
 @theme inline {
-  --font-sans: 'Inter', 'Inter Fallback', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-  --font-display: 'PP Editorial New', 'Times New Roman', serif;
+  --font-sans: var(--font-sans), system-ui, sans-serif;
+  --font-mono: var(--font-mono), 'JetBrains Mono', monospace;
+  --font-display: var(--font-serif), 'Times New Roman', serif;
+  --font-serif: var(--font-serif), 'Times New Roman', serif;
+
+  /* Landing — palette éditoriale papier */
+  --color-paper: #FAF6EE;
+  --color-ink: #121008;
+  --color-ink-soft: #3B342A;
+  --color-tomato: #CC3A1E;
+  --color-olive: #8B7A2F;
+  --color-line: #E8DFCE;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -280,4 +289,114 @@
 }
 .shadow-header-none {
   box-shadow: none;
+}
+
+/* ─── Landing page utilities ─────────────────────────────────────── */
+
+.landing-root {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+.font-display {
+  font-family: var(--font-display);
+  font-feature-settings: "liga" 1, "dlig" 1;
+  letter-spacing: -0.01em;
+}
+
+/* Paper grain overlay — adds subtle texture to the whole landing */
+.grain::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.08;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.8'/></svg>");
+}
+
+/* Reveal on scroll — used with IntersectionObserver */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 800ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 80ms; }
+.reveal-delay-2 { transition-delay: 160ms; }
+.reveal-delay-3 { transition-delay: 240ms; }
+.reveal-delay-4 { transition-delay: 320ms; }
+.reveal-delay-5 { transition-delay: 400ms; }
+.reveal-delay-6 { transition-delay: 480ms; }
+
+/* Char-by-char reveal for hero type */
+@keyframes charIn {
+  from { opacity: 0; transform: translateY(0.4em) rotate(-2deg); }
+  to   { opacity: 1; transform: translateY(0) rotate(0); }
+}
+.char {
+  display: inline-block;
+  opacity: 0;
+  animation: charIn 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Marquee (used for a strip of rolling words) */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.marquee { animation: marquee 40s linear infinite; }
+
+/* Soft pulsing dot — for the live tracking mini-map */
+@keyframes pulseDot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.8); opacity: 0.4; }
+}
+.pulse-dot {
+  position: relative;
+}
+.pulse-dot::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 9999px;
+  background: currentColor;
+  opacity: 0.25;
+  animation: pulseDot 2s ease-in-out infinite;
+}
+
+/* Decorative divider */
+.bistro-divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--color-ink-soft);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.9rem;
+  letter-spacing: 0.03em;
+}
+.bistro-divider::before,
+.bistro-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.35;
+}
+
+/* Parallax helper — driven by CSS scroll-timeline or JS var */
+.parallax-slow { will-change: transform; transition: transform 40ms linear; }
+
+/* Smooth scroll for nav clicks */
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal, .char { transition: none !important; animation: none !important; opacity: 1 !important; transform: none !important; }
 }

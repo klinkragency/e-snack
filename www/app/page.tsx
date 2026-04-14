@@ -1,27 +1,31 @@
-import { Header } from "@/components/header";
-import { HeroSection } from "@/components/sections/hero-section";
-import { PhilosophySection } from "@/components/sections/philosophy-section";
-import { FeaturedProductsSection } from "@/components/sections/featured-products-section";
-import { TechnologySection } from "@/components/sections/technology-section";
-import { GallerySection } from "@/components/sections/gallery-section";
-import { EditorialSection } from "@/components/sections/editorial-section";
-import { AppSection } from "@/components/sections/app-section";
-import { TestimonialsSection } from "@/components/sections/testimonials-section";
-import { FooterSection } from "@/components/sections/footer-section";
+import { LandingNav } from "@/components/landing/nav"
+import { Hero } from "@/components/landing/hero"
+import { MarqueeStrip } from "@/components/landing/marquee-strip"
+import { Manifesto } from "@/components/landing/manifesto"
+import { ThreeModes } from "@/components/landing/three-modes"
+import { MenuDemo } from "@/components/landing/menu-demo"
+import { Payments } from "@/components/landing/payments"
+import { Tracking } from "@/components/landing/tracking"
+import { FeatureGrid } from "@/components/landing/feature-grid"
+import { Stack } from "@/components/landing/stack"
+import { CTA } from "@/components/landing/cta"
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-background">
-      <Header />
-      <HeroSection />
-      <PhilosophySection />
-      <FeaturedProductsSection />
-      <TechnologySection />
-      <GallerySection />
-      <EditorialSection />
-      <AppSection />
-      <TestimonialsSection />
-      <FooterSection />
-    </main>
-  );
+    <div className="landing-root grain relative">
+      <LandingNav />
+      <main>
+        <Hero />
+        <MarqueeStrip />
+        <Manifesto />
+        <ThreeModes />
+        <MenuDemo />
+        <Payments />
+        <Tracking />
+        <FeatureGrid />
+        <Stack />
+        <CTA />
+      </main>
+    </div>
+  )
 }

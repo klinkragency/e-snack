@@ -7,8 +7,8 @@ const SECTIONS = [
   { id: "modes", label: "Modes" },
   { id: "menu", label: "Menu" },
   { id: "paiements", label: "Paiements" },
-  { id: "suivi", label: "Suivi" },
-  { id: "details", label: "Détails" },
+  { id: "anatomie", label: "Anatomie" },
+  { id: "chiffres", label: "Chiffres" },
   { id: "stack", label: "Stack" },
 ]
 
@@ -49,10 +49,10 @@ export function LandingNav() {
           ))}
         </nav>
         <a
-          href="#contact"
+          href="/restaurants"
           className="group hidden items-center gap-2 rounded-full border border-[var(--color-ink)] bg-[var(--color-ink)] px-5 py-2 text-xs font-semibold text-[var(--color-paper)] transition-all hover:bg-[var(--color-tomato)] hover:border-[var(--color-tomato)] md:inline-flex"
         >
-          Lancer une démo
+          Voir le menu
           <span className="transition-transform group-hover:translate-x-0.5">→</span>
         </a>
       </div>

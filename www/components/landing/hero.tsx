@@ -81,17 +81,17 @@ export function Hero() {
 
           <div className="flex flex-wrap items-center gap-3">
             <a
-              href="#contact"
+              href="/restaurants"
               className="group inline-flex items-center gap-3 rounded-full bg-[var(--color-ink)] px-7 py-4 text-sm font-semibold text-[var(--color-paper)] transition-all hover:bg-[var(--color-tomato)]"
             >
-              Demander une démo
+              Voir le menu
               <span className="transition-transform group-hover:translate-x-1">→</span>
             </a>
             <a
               href="#manifeste"
               className="inline-flex items-center gap-2 rounded-full border border-[var(--color-ink)]/20 px-6 py-4 text-sm font-medium text-[var(--color-ink)] transition-colors hover:border-[var(--color-ink)]/50 hover:bg-[var(--color-ink)]/[0.04]"
             >
-              Découvrir le projet
+              Comprendre la plateforme
             </a>
           </div>
         </div>

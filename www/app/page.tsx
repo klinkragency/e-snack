@@ -6,9 +6,11 @@ import { ThreeModes } from "@/components/landing/three-modes"
 import { MenuDemo } from "@/components/landing/menu-demo"
 import { Payments } from "@/components/landing/payments"
 import { Tracking } from "@/components/landing/tracking"
+import { Anatomy } from "@/components/landing/anatomy"
+import { Numbers } from "@/components/landing/numbers"
 import { FeatureGrid } from "@/components/landing/feature-grid"
 import { Stack } from "@/components/landing/stack"
-import { CTA } from "@/components/landing/cta"
+import { Colophon } from "@/components/landing/colophon"
 
 export default function Home() {
   return (
@@ -22,9 +24,11 @@ export default function Home() {
         <MenuDemo />
         <Payments />
         <Tracking />
+        <Anatomy />
+        <Numbers />
         <FeatureGrid />
         <Stack />
-        <CTA />
+        <Colophon />
       </main>
     </div>
   )
